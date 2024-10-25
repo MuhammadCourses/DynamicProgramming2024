@@ -38,7 +38,7 @@ saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolut
 
 % Q.2 Solving numerically using Finite Difference Method
 % create 1000 grid points between 0 and 10
-pars.n = 10000;
+pars.n = 100;
 t = linspace(0, pars.T, pars.n);
 pars.step_size = pars.T/pars.n;
 % initialize consumption vector
