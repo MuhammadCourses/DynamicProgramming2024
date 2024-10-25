@@ -19,12 +19,12 @@ for t = 2:pars.T
 end
 
 % Q.1 Solve Consumption equation analytically using integrating factor method
-% C(t) = 1.0986*exp(0.5*(0.02t+0.01*t^2))
+% C(t) = 1.4094*exp(0.5*(0.02t+0.01*t^2))
 
 % Plot this solution function 
 
 t = 1:pars.T;
-C = 1.0986*exp(0.5*(0.02*t+0.01*t.^2));
+C = 1.4094*exp(0.5*(0.02*t+.5*0.01*t.^2));
 figure
 plot(t,C)
 hold on
@@ -34,7 +34,7 @@ ylabel('Consumption (C)'); % Add y label
 hold off
 
 % Save picture 
-saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolutions/Consumption.png')
+saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolutions/ConsumptionEvolutionAnalytical.png')
 
 % Q.2 Solving numerically using Finite Difference Method
 % create 1000 grid points between 0 and 10
@@ -56,13 +56,13 @@ end
 figure
 scatter(t, C, 'o', 'LineWidth', .01) % Numerical solution as scatter plot with circles
 hold on
-plot(t, 1.0986*exp(0.5*(0.02*t+0.01*t.^2)), '-r', 'LineWidth', 1) % Analytical solution as thick red line
+plot(t, 1.4094*exp(0.5*(0.02*t+.5*0.01*t.^2)), '-r', 'LineWidth', 1) % Analytical solution as thick red line
 xlabel('Time (t)'); % Add x label
 ylabel('Consumption (C)'); % Add y label
 legend('Numerical Solution', 'Analytical Solution')
 hold off
 % save 
-saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolutions/ConsumptionNumerical.png')
+saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolutions/ConsumptionEvolutionNumerical_100Steps.png')
 % Store this C as C100
 C100 = C;
 t100 = t;
@@ -86,7 +86,7 @@ figure
 scatter(t, C, 'o', 'LineWidth', .01) % Numerical solution as scatter plot with circles
 hold on
 scatter(t100, C100, 'x', 'LineWidth', .01) % Numerical solution as scatter plot with circles
-plot(t, 1.0986*exp(0.5*(0.02*t+0.01*t.^2)), '-r', 'LineWidth', 1) % Analytical solution as thick red line
+plot(t, 1.4094*exp(0.5*(0.02*t+.5*0.01*t.^2)), '-r', 'LineWidth', 1) % Analytical solution as thick red line
 xlabel('Time (t)'); % Add x label
 ylabel('Consumption (C)'); % Add y label
 legend('Numerical Solution (10 points)', 'Numerical Solution (100 points)', 'Analytical Solution')
