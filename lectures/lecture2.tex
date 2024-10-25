@@ -235,6 +235,44 @@
 \newpage
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+Last lecture, we introduced the Bellman equation:
+\begin{equation*}
+	V(k) = \max_{k'} \Big\{ u\Big( f(k) - k' \Big) + \beta V(k') \Big\}
+\end{equation*}
+
+\vspace{5mm}
+\begin{witemize}
+\item The value today is = flow payoff + continuation value
+
+\item This assumes there is no uncertainty: We can make perfect forecasts about the future
+
+	{\footnotesize Not how the world works!} 
+
+\item Suppose production also depends on productivity $y_t = f(k_t, A_t)$ and $A_{t+1}$ is uncertain
+\end{witemize}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+In an uncertain world, we care about the \textit{expected} continuation value
+\begin{equation*}
+	V(k, {\color{blue} A}) = \max_{k'} \Big\{ u\Big( f(k, {\color{blue} A}) - k' \Big) + \beta {\color{blue} \mathbb E} V(k', {\color{blue} A'}) \Big\}
+\end{equation*}
+
+\vspace{5mm}
+\begin{witemize}
+\item Now the only question is: How do we compute the expectation $\mathbb E$?
+
+\item We have to study stochastic processes (and stochastic calculus) to answer this  
+\end{witemize}
+
+\end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -242,7 +280,7 @@
 \thispagestyle{empty}
 \addtocounter{framenumber}{-1}
 
-Part 1: difference equations
+Part 1: Difference equations
 \begin{enumerate}
 	\item Stochastic processes
 	\item Markov chains
@@ -251,19 +289,21 @@ Part 1: difference equations
 \end{enumerate}
 
 \vspace{5mm} 
-Part 2: stochastic dynamic programming
+Part 2: Stochastic dynamic programming
 \begin{enumerate}
 	\item Stochastic dynamic programming
 	\item History notation
 	\item The stochastic neoclassical growth model
-	\item Application: optimal stopping problem
 \end{enumerate}
+
+\vspace{5mm} 
+Part 3: Optimal stopping 
 \end{frame}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{transitionframe}
-	{\color{white} \Huge \textbf{Part 1: difference equations} \vspace{2mm}}
+	{\color{white} \Huge \textbf{Part 1: Difference Equations} \vspace{2mm}}
 \end{transitionframe}
 
 
@@ -479,7 +519,7 @@ where $y_t$ is a stochastic process
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{transitionframe}
-	{\color{white} \huge \textbf{Part 2: stochastic dynamic programming} \vspace{2mm}}
+	{\color{white} \huge \textbf{Part 2: Stochastic Dynamic Programming} \vspace{2mm}}
 \end{transitionframe}
 
 
@@ -494,6 +534,8 @@ where $y_t$ is a stochastic process
 \end{equation*}
 subject to $k_{t+1} = g(k_t, c_t, \epsilon_{t+1})$ \hspace{1mm} (\textit{first-order stochastic difference equation})
 
+\item Notice: $\{ c_t \}$ now denotes a stochastic process, no longer simple sequence!
+
 \item $\{\epsilon_t\}_{t=0}^\infty$ is sequence of iid random variables (\textit{stochastic process})
 
 \item Initial condition $x_0$ given
@@ -504,15 +546,45 @@ subject to $k_{t+1} = g(k_t, c_t, \epsilon_{t+1})$ \hspace{1mm} (\textit{first-o
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 \begin{witemize}
-\item Dynamic programming approach: we again look for recursive representation on state space $k_t \in \mathcal X$
+\item Usually best to start with sequence problem, then derive recursive representation
+
+\item To derive recursive representation, your first question must be:
+\begin{itemize}
+\item Recursive representation means we go from thinking about sequences (stochastic processes) to thinking about functions
+
+\item But functions \textit{of what}? I.e., what is the domain of the functions we're interested in?
+
+\item Answer: functions of the \textit{state variables}
+\end{itemize}
+
+\item What are state variables?
+\begin{itemize}
+\item In the (deterministic) neoclassical growth model: just $k$
+
+\item Generally: state variables = set of information you need today to compute the continuation value for tomorrow
+
+\item That's why they're called ``states''
+\end{itemize}
+
+\end{witemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\begin{witemize}
+\item Dynamic programming: look for recursive representation with state variable $k$
+
+\item Q: Why is $k$ the state variable here, not $(k, \epsilon)$? (Think about structure of $g(\cdot)$.)
 
 \item The problem is to look for a \textit{policy function} $c(k)$ that solves 
 \begin{equation*}
-	V(k) = \max_{c} \bigg\{ u(c) + \beta \mathbb E \bigg[ V\Big( g(k, c, \epsilon) \Big) \, \Big| \, k \bigg] \bigg\}
+	V(k) = \max_{c} \bigg\{ u(c) + \beta \mathbb E \bigg[ V\Big( g(k, c, \epsilon) \Big) \, \Big| \, k \bigg] \bigg\}  ,
+	\quad \text{ where }
+	\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)
 \end{equation*}
-where $\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)$
 
-\item $V(k)$ is the (lifetime) value that an agent obtains from solving this problem starting from $k$
+\item $V(k)$ is (lifetime) value that agent obtains from solving this problem starting from $k$
 
 \item FOC that characterizes the consumption policy function $c(k)$ is 
 \begin{equation*}
@@ -528,8 +600,6 @@ where $\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)$
 \begin{witemize}
 \item A very popular approach to deal with uncertainty in macro is to use history notation (Ljungqvist-Sarget, e.g., chapters 8, 12)
 
-\item Economy populated by individuals, indexed by $i \in I$
-
 \item Time is discrete and indexed by $t = 0, 1, \ldots$
 
 \item At every $t$, there is a realization of a stochastic event $s_t \in \mathcal S$
@@ -538,9 +608,8 @@ where $\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)$
 
 \item The unconditional probability of history $s^t$ is given by $\pi_t(s^t \mid s_0)$
 
-\item If Markov, $\pi_t \Big( s^t \, | \, s_0 \Big) = \pi(s_t \mid s_{t-1}) \pi(s_{t-1} \mid s_{t-2}) \ldots \pi(s_0)$
+\item If Markov, $\pi_t( s^t \, | \, s_0) = \pi(s_t \mid s_{t-1}) \pi(s_{t-1} \mid s_{t-2}) \ldots \pi(s_0)$
 
-\item Single consumption good (dollars) as numeraire
 \end{witemize}
 \end{frame}
 
@@ -548,80 +617,24 @@ where $\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)$
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
+\begin{witemize}
+\item Crucial to understand notation:
 \begin{itemize}
-\item The \textbf{lifetime value} of individual $i$ is then defined as 
+\item $\{ c_t \}_{t \geq 0}$ is the stochastic process
+\item $c_t$ is the random variable
+\item $c_t(s^t)$ is the realization of the random variable at date $t$ in history $s^t$
+\end{itemize}
+
+\item The \textbf{lifetime value} of representative household is then defined as
 \begin{align*}
-	V_i(s_0) = \sum_{t=0}^T \Big( \beta_i \Big)^t \sum_{s^t} \pi_t \Big( s^t \mid s_0 \Big) u_i \Big( c_t^i \Big( s^t \Big), n_t^i \Big(s^t \Big) \Big)
+	V(s_0) = \sum_{t=0}^T \beta^t \sum_{s^t} \pi_t \Big( s^t \mid s_0 \Big) u \Big( c_t \Big( s^t \Big), \ell_t \Big(s^t \Big) \Big)
 \end{align*}
+
+\item Here we also allow household to choose labor supply $\ell_t$
 
 \item \textit{Generalizations}: heterogeneous beliefs, general preferences (Epstein-Zin), recursive formulation, multiple commodities, intergenerational considerations
 
-\item Suppose $c_t^i(\cdot)$ and $l_t^i(\cdot)$ are functions of some primitive (policy) $\theta$
-
-\end{itemize}
-\end{frame}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\begin{itemize}
-\item Consider policy experiment $d \theta$, then $i$'s \textbf{private welfare assessment} is
-\begin{align*}
-	\frac{ d V_i(s_0) }{d \theta} = \sum_{t=0}^T \Big( \beta_i \Big)^t \sum_{s^t} \pi_t \Big( s^t \mid s_0 \Big)  \frac{\partial u_i (s^t)}{\partial c_t^i}  {\color{myorange} \frac{ d u_{i \mid c} (s^t)}{d \theta}}
-\end{align*}
-
-\vspace{4mm}
-{\color{myorange} Instantaneous consumption-equivalent effect} of policy $d \theta$ at date ${\color{myorange} t}$, history ${\color{myorange} s^t}$ on individual ${\color{myorange} i}$:
-\vspace*{0mm}
-\begin{align*}
-	{\color{myorange} \frac{ d u_{i \mid c} (s^t)}{d \theta}} \equiv \frac{ \frac{d u_i (c_t^i(s^t), n_t^i(s^t))}{d \theta} }{ \frac{\partial u_i (s^t)}{\partial c_t^i}}  = \underbrace{ \frac{d c_t^i (s^t)}{d \theta} + \frac{ \frac{\partial u_i (s^t)}{\partial n_t^i} }{ \frac{\partial u_i (s^t)}{\partial c_t^i}}  \frac{d n_t^i (s^t)}{d \theta} }_\text{in {\color{myorange} \textit{consumption} units}}
-\end{align*}
-
-\item Example: $d \theta$ gives $i$ marginal dollar at $s^t$, then
-\begin{equation*}
-	\frac{dV_i(s_0)}{d \theta} = (\beta_i)^t \pi_t(s^t \mid s_0) \frac{\partial u_i(s^t)}{\partial c_t^i}
-\end{equation*}
-\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{}
-\vspace{4mm}
-{\color{myblue} \textbf{Conventional benchmarks}}:
-\begin{itemize}
-	{\small
-		
-		\vspace{2mm}
-		\item Policy $d \theta$ is {\color{myorange} Pareto improving} if $\frac{ d V_i(s_0) }{d \theta} \geq 0$ for all $i$, strictly for some $i$
-		
-		\vspace{0mm}
-		\item {\color{myorange}Welfarist planners}: \hspace{0.5mm} SWF given by \hspace{0.2mm} $\mathcal{W}\left(\left\{ V_{i}\left(s_{0}\right)\right\} _{i\in I}\right)$
-		
-		\vspace{0.5mm}
-		{\footnotesize \textit{Utilitarian, Isoelastic, Rawlsian, Nash, Dictator, ...}}
-		
-		\vspace{0mm}
-		\item Policy $d \theta$ is desirable for a {\color{myorange} welfarist planner} if
-		\vspace*{-1mm}
-		\begin{equation*}
-			\int \lambda_{i}\left(s_{0}\right) \frac{ d V_i(s_0) }{d \theta} d i > 0 \, , \hspace{10mm}  \text{where} \hspace{2mm} \lambda_{i}\left(s_{0}\right)=\frac{\partial\mathcal{W}\left(\left\{ V_{i}\left(s_{0}\right)\right\} _{i\in I}\right)}{\partial V_{i}}
-		\end{equation*}
-		}
-\end{itemize}
-
-\vspace{6mm}
-{\color{navyblue} \textbf{Remarks}}:
-{\small
-\begin{itemize}
-\item All welfarist planners agree when individuals ex-ante ($s_0$) homogeneous
-
-\vspace{-1mm}
-\item How to make welfare assessments with \textit{heterogeneous} individuals?
-
-\vspace{-1mm}
-\item If you're interested, see D\'avila-Schaab (2022)
-\end{itemize}
-}
+\end{witemize}
 \end{frame}
 
 
@@ -633,12 +646,12 @@ where $\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)$
 
 \item At $t$, event $s_t \in \mathcal{S}$ is realized; history $s^t = (s_0, \ldots, s_t)$ has probability $\pi_t(s^t)$
 
-\item Representative household has preferences of paths of consumption $c_t(s^t)$ and labor $l_t(s^t)$ 
+\item Representative household has preferences over consumption $c_t(s^t)$ and labor $\ell_t(s^t)$ 
 \begin{equation*}
-	\sum_{t=0}^\infty \beta^t \sum_{s^t} \pi_t\Big(s^t \Big) u \Big( c_t(s^t), l_t(s^t) \Big)
+	\sum_{t=0}^\infty \beta^t \sum_{s^t} \pi_t\Big(s^t \Big) u \Big( c_t(s^t), \ell_t(s^t) \Big)
 \end{equation*}
 
-\item Inada conditions $\lim_{c\to 0} u_c(c, l) = \lim_{l\to0} u_l (c, l) = \infty$
+\item Inada conditions $\lim_{c\to 0} u_c(c, \ell) = \lim_{\ell \to0} u_\ell (c, \ell) = \infty$
 
 \item At $t=0$, household endowed with $k_0$
 \end{witemize}
@@ -650,8 +663,8 @@ where $\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)$
 \begin{witemize}
 \item Technology, capital accumulation, and budget / resource constraint:
 \begin{align*}
-	c_t(s^t) + \iota_t(s^t) &\leq A_t(s^t) F(k_t(s^{t-1}), l_t(s^t)) \\
-	k_{t+1}(s^t) &= (1-\delta) k_t(s^{t-1}) + \iota_t(s^t)
+	c_t(s^t) + i_t(s^t) &= A_t(s^t) F(k_t(s^{t-1}), \ell_t(s^t)) \\
+	k_{t+1}(s^t) &= (1-\delta) k_t(s^{t-1}) + i_t(s^t)
 \end{align*}
 
 \item $F(\cdot)$ is twice continuously differentiable and constant returns to scale
@@ -663,32 +676,33 @@ where $\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)$
 \end{frame}
 
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Lagrangian approach to sequence problem}
-\begin{witemize}
-\item Form Lagrangian 
+
 \begin{align*}
 	L = &\sum_{t=0}^\infty \sum_{s^t} \beta^t \pi_t(s^t) \bigg\{ u (c_t(s^t), l_t(s^t)) \\
-	&+ \lambda_t(s^t) \bigg[ A_t(s^t) F(k_t(s^{t-1}), l_t(s^t)) - c_t(s^t) + (1-\delta) k_t(s^{t-1})  - k_{t+1}(s^t) \bigg] \bigg\}
+	&+ \lambda_t(s^t) \bigg[ A_t(s^t) F(k_t(s^{t-1}), \ell_t(s^t)) - c_t(s^t) + (1-\delta) k_t(s^{t-1})  - k_{t+1}(s^t) \bigg] \bigg\}
 \end{align*}
 
-\item FOCs for $c_t(s^t)$, $l_t(s^t)$ and $k_{t+1}(s^t)$ are given by
+\begin{witemize}
+\item FOCs for $c_t(s^t)$, $\ell_t(s^t)$ and $k_{t+1}(s^t)$ are given by
 \begin{align*}
 	u_c(s^t) &= \lambda_t(s^t) \\
-	u_l(s^t) &= u_c(s^t) A_t(s^t) F_n(s^t) \\
+	u_\ell(s^t) &= u_c(s^t) A_t(s^t) F_\ell(s^t) \\
 	u_c(s^t) \pi_t(s^t) &= \beta \sum_{s^{t+1} \mid s^t} u_c(s^{t+1}) \pi_{t+1}(s^{t+1}) \bigg[ A_{t+1} (s^{t+1}) F_k (s^{t+1}) + (1-\delta) \bigg]
 \end{align*}
 
-\item Summation over $(s^{t+1} \mid s^t)$ is like conditional expectation (summing over histories that branch out from $s^t$)
+\item Summation over $(s^{t+1} \mid s^t)$ is like conditional expectation 
+
+	{\footnotesize summing over histories that branch out from $s^t$}
+
 \end{witemize}
 \end{frame}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{Recursive representation: dynamic programming}
+\begin{frame}{Dynamic programming approach}
 \begin{witemize}
 \item Assume time-homogeneous Markov process:
 \begin{equation*}
@@ -697,42 +711,44 @@ where $\mathbb E[V(\cdot) \mid k] = \int V(\cdot) dF(\epsilon)$
 
 \item Drop $t$ subscripts: $s$ is current state, $s'$ denotes next period's draw
 
-\item Denote by $X_t$ the \textit{endogenous state} of the problem: for now, assume there is such a representation 
+\item Denote by $X_t$ \textit{endogenous state} (assume for now there is such a representation)
 
 \item Intuitively: $s$ is the exogenous state and $X$ is the endogenous state 
-
-\item Bellman equation can be written: 
-\begin{equation*}
-	V(X, s) = \max_{c, l} \bigg\{ u(c, l) + \beta \sum_{s'} \pi(s' \mid s) V(X', s') \bigg\}
-\end{equation*}
-subject to $X' = g(X, c, l, s, s')$
 \end{witemize}
+
+\vspace{5mm}
+Bellman equation becomes: 
+\begin{equation*}
+	V(X, s) = \max_{c, \ell} \bigg\{ u(c, \ell) + \beta \sum_{s'} \pi(s' \mid s) V(X', s') \bigg\}
+	\quad \text{ where }
+	X' = g(X, c, \ell, s, s')
+\end{equation*}
+
 \end{frame}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{frame}{4. Application: optimal stopping problem}
+\begin{transitionframe}
+	{\color{white} \Huge \textbf{Part 3: Optimal Stopping} \vspace{2mm}}
+\end{transitionframe}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Application: optimal stopping problem}
+
+\textbf{Problem}: Every period $t$, an agent draws an offer $x$ from a uniform distributon over the unit interval $[0, 1]$. The agent can accept the offer, in which case her payoff is $x$, and the game ends, or the agent can reject the offer and draw again a period later. Draws are independent. Rejections are costly because the agent discounts the future at $\beta$. The game continues until the agent receives an offer she accepts.
+
 
 \vspace{5mm}
-\textbf{Problem}: Every period $t$, an agent draws an offer $x$ from the unit interval $[0, 1]$. The agent can accept the offer, in which case her payoff is $x$, and the game ends. Draws are independent. The agent discounts the future at $\beta$. The game continues until the agent receives an offer she accepts.
-
-\vspace{5mm}
+Many applications (problems in life) look like this: 
 \begin{itemize}
-\item Agent's dynamic optimization problem given recursively by Bellman equation 
-\begin{equation*}
-	V(x) = \max \Big\{ x, \, \beta \mathbb{E} V(x') \Big\}
-\end{equation*}
-where the expectation (operator) $\mathbb{E}$ is taken over the next draw $x'$
-
-\item There will be a threshold $x^* \in [0, 1]$ such that agent accepts for $x \geq x^*$
-
-\item This is also called a \textbf{free boundary problem} because we have to look for the endogenous boundary of the problem $x^*$
-
-\item Many applications (problems in life) look like this: 
-
-buying a house, searching for a partner, closing a production plant, exercising an option, adopting a new technology, ... 
-
+	\item buying a house
+	\item searching for a partner
+	\item closing a production plant
+	\item exercising an option
+	\item adopting a new technology
 \end{itemize}
 
 \end{frame}
@@ -741,29 +757,182 @@ buying a house, searching for a partner, closing a production plant, exercising 
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 
-\begin{itemize}
-\item The value function will look like:
+What is recursive / dynamic programming representation of optimal stopping problem?
+
+\pause
+\vspace{5mm}
+Agent's dynamic optimization problem given recursively by Bellman equation 
 \begin{equation*}
-	V(x) = \begin{cases} x & \text{ if } \;\; x \geq x^* \\
+	V(x) = \max \Big\{ x, \, \beta \mathbb{E} V(x') \Big\}
+\end{equation*}
+where the expectation (operator) $\mathbb{E}$ is taken over the next draw $x'$
+
+
+\vspace{5mm} 
+Our problem is to find the value function $V(x)$ that solves the Bellman equation. We'll also want to find the associated policy rule.
+
+\vspace{6mm}
+\textbf{Definition: }\textit{A policy is a function that maps every point in state space $[0, 1]$ to an action}
+
+	{\footnotesize There are 2 actions: ACCEPT and REJECT}
+
+\vspace{6mm}
+\textbf{Definition: }\textit{An optimal policy achieves payoff $V(x)$ for all feasible $x \in [0, 1]$}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+Let's try to understand the shape of $V(x)$ intuitively:
+\vspace{2mm}
+\begin{witemize}
+\item For large values $\hat x$ where you ACCEPT, what's the value $V(\hat x)$?
+\item For small values $\tilde x$ where you REJECT and instead choose the continuation value, $\beta \mathbb E V(x') > \tilde x$, does the continuation value depend on $\tilde x$? Why not?
+\end{witemize}
+
+\pause
+\vspace{5mm}
+Shape of $V(x)$ must therefore be:
+\begin{equation*}
+	V(x) = 
+	\begin{cases} 
+		x & \text{ if } \;\; x \geq x^* \\
 		x^* & \text{ if } \;\; x < x^* 
-		\end{cases}
+	\end{cases}
+\end{equation*}
+\begin{witemize}
+\item Solution to the problem: there is be threshold $x^* \in [0, 1]$ s.t. agent accepts for $x \geq x^*$
+
+\item Also called \textbf{free boundary problem} (have to find endogenous boundary $x^*$)
+
+\end{witemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+\vspace{5mm}
+\textbf{Lemma}: \textit{In the optimal stopping problem, a policy is a best response to a continuation value function $\widehat v(x)$ if and only if the policy is a threshold rule
+with cutoff} 
+\begin{equation*}
+	x^* \equiv \beta \mathbb E[ \widehat v(x')]  
 \end{equation*}
 
-\item Find the value $x^*$ such that this function satisfies the Bellman equation
+\vspace{5mm}
+\textbf{Proof:} Show by contradiction that optimization must imply 
+\begin{equation*}
+\begin{array}{ccc}
+	\text{ACCEPT} & \text{if} & x > \beta \mathbb E[ \widehat{v}(x')] \equiv x^* \\
+	\text{REJECT} & \text{if} & x < \beta \mathbb E[ \widehat{v}(x')] \equiv x^*
+\end{array}
+\end{equation*}
+If $x = \beta \mathbb E[\widehat v(x')]$, then ACCEPT and REJECT generate the same payoff. $\blacksquare $
 
-\item At $x = x^*$, indifferent between accepting and stopping:
+\vspace{4mm}
+\begin{itemize}
+\item Why no jump in $V(x)$ at $x^*$? (lim from RHS must be $x^*$, from LHS by contradiction)
+
+\item Continuation value must be $V(x')$ because problem tmr is repeat of today
+\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+\vspace{6mm}
+\begin{witemize}
+\item We just concluded: at $x = x^*$, indifferent between ACCEPT and REJECT
+
+\item This is enough information to solve the problem!
+\end{witemize}
 \begin{align*}
 	V(x^*) &= x^* \\
 	&= \beta \mathbb{E} V(x') \\
 	&= \beta \int_0^{x^*} x^* f(x) dx + \beta \int_{x^*}^1 x f(x) dx \\
-	&= \beta x^*  [x]_0^{x^*} + \beta \frac{1}{2} [x^2]_{x^*}^1
+	&= \beta x^*  [x]_0^{x^*} + \beta \frac{1}{2} [x^2]_{x^*}^1 \\
+	&= \beta (x^*)^2 + \beta \frac{1}{2} [1 - (x^*)^2]
 \end{align*}
-where $f(x) = \frac{1}{1 - 0}$ is the uniform density
 
-\item Solution: $x^* = \beta (x^*)^2 + \beta \frac{1}{2} [1 - (x^*)^2]$ or $x^* = \frac{1}{\beta} (1 - \sqrt{1 - \beta^2})$
+\vspace{5mm}
+\textbf{Solution:} 
 
-\end{itemize}
+\vspace{-10.4mm}
+\begin{equation*}
+	x^* = \frac{1}{\beta} (1 - \sqrt{1 - \beta^2})
+\end{equation*}
+
+	{\footnotesize Always sanity-check comparative statics: What happens as $\beta \to 0$ and $\beta \to 1$?}
+
 \end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+Why is this threshold rule a \textit{solution to the Bellman Equation}?
+
+If you REJECT, your continuation payoff is 
+\begin{equation*}
+	x^* = \beta \mathbb E V(x') = \beta \int_0^{x^*} x^* f(x) \, dx + \beta \int_{x^*}^1 x \, f(x) \, dx. 
+\end{equation*}
+So it's optimal to REJECT if $x \leq x^*$ and it's optimal to ACCEPT if $x \geq x^*$. Hence, for all values of $x$
+\begin{equation*}
+	V(x) = \max \{x, x^*\} = \max \{x, \beta \mathbb E[ V(x') ]\} 
+\end{equation*}
+
+\end{frame}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Optimal stopping: Example 1}
+
+\textbf{Problem:}
+XXX
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Optimal stopping: Example 2}
+
+\textbf{Problem:}
+A burglar contemplates a series of burglaries. He may accumulate his larcenous earnings as long as he is not caught, but if he is caught during a burglary, he loses everything including his initial fortune, if any, and he is forced to retire. He wants to retire before he is caught. Assume that returns for each burglary are iid. and independent of the event that he is caught, which is, on each trial, equally probable. He wants to retire with a maximum expected fortune.
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Optimal stopping: Example 3}
+
+\textbf{Problem:}
+XXX
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Optimal stopping: Example 4}
+
+\textbf{Problem:}
+XXX
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Optimal stopping: Example 5}
+
+\textbf{Problem:}
+XXX
+
+\end{frame}
+
+
 
 
 \end{document}

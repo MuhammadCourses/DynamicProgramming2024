@@ -100,9 +100,83 @@
 \maketitle
 
 
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Problem 1: Consumption-Savings with Deterministic Income}
+\vspace{5mm}
+\section*{Problem 1: Optimal Stopping}
+
+Consider the optimal stopping application from class: Each period $t = 0, 1, \ldots$ the consumer draws a job offer from a uniform distribution with support in the unit interval: $x \sim \text{unif}[0, 1]$. The consumer can either accept the offer and realize net present value $x$, or the consumer can wait another period and draw again. Once you accept an offer the game ends. Waiting to accept an offer is costly because the value of the remaining offers declines at rate $\rho = - \log(\beta)$ between periods. The Bellman equation for this problem is:
+\begin{equation*}
+	V(x) = \max \bigg\{ x, \; \beta \mathbb E V(x') \bigg\}
+\end{equation*}
+where $x'$ is your next draw, which is a random variable.
+
+
+\vspace{2mm}
+\begin{enumerate}[(a)]
+\item Explain the intuition behind this Bellman equation. Explain every term.
+
+\item Briefly describe one decision problem you have faced in your own life that could be modeled using the above Bellman equation. 
+
+\item Consider the associated functional operator:
+\begin{equation*}
+	(Bw)(x) = \max \bigg\{ x, \; \beta \mathbb E w(x') \bigg\}
+\end{equation*}
+for all $x$. Using Blackwell's conditions, show that this Bellman operator is a contraction mapping. 
+
+\item What does the contraction mapping property imply about $\lim_{n \to \infty} B^n w$, where $w$ is \textit{any} arbitrary function? 
+
+\item Suppose we make a (bad?) guess $w(x) = 1$ for all $x$. Analytically iterate on $B^n w$ and show that 
+\begin{equation*}
+	\lim_{n \to \infty} (B^n w) (x) = V(x) = \begin{cases}
+		x^* & \text { if } x \leq x^* \\
+		x & \text { if } x > x^*
+	\end{cases}
+\end{equation*}
+where
+\begin{equation*}
+	x^* = e^\rho \bigg( 1 - \Big[ 1 - e^{- 2 \rho} \Big]^\frac{1}{2} \bigg).
+\end{equation*}
+\end{enumerate}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{5mm}
+\section*{Problem 2: Optimal Project Completion}
+
+Every period you draw a cost $c$ distributed uniformly between $0$ and $1$ for completing a project. If you undertake the project, you pay $c$, and complete the project with probability $1-p$. Each period in which the project remains uncompleted, you pay a late fee of $l$. The game continues until you complete the project.
+
+
+\vspace{2mm}
+\begin{enumerate}[(a)]
+\item Write down the Bellman Equation assuming no discounting. Why is it ok to assume no discounting in this problem?
+
+\item Derive the optimal threshold: $c^* = \sqrt{2l}$. Explain intuitively, why this threshold does not depend on the probability of failing to complete the project, $p$. 
+
+\item How would these results change if we added discounting to the framework? Redo steps a and b, assuming that the agent discounts the future with discount factor $0 < \beta < 1$ and assuming that $p = 0$. Show that the optimal threshold is given by
+\begin{equation*}
+	c^* = \frac{1}{\beta} \bigg( \beta - 1 + \sqrt{ (1-\beta)^2 + 2 \beta^2 l } \bigg)
+\end{equation*}
+
+\item When $0 < \beta < 1$, is the optimal value of $c^*$ still independent of the value of $p$? If not, how does $c^*$ qualitatively vary with $p$? Provide an intuitive argument.
+
+\item Take the perspective of an agent who has not yet observed the current period's draw of $c$. Prove that the expected delay until completion is given by:
+\begin{equation*}
+	\frac{1}{c^*(1-p)} - 1
+\end{equation*}
+
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section*{Problem 3: Consumption-Savings with Deterministic Income}
 
 Consider an economy populated by a continuum of infinitely lived households. There is no uncertainty in this economy for now. Households' preferences are given by
 \begin{equation*}
@@ -155,7 +229,7 @@ We will now derive the simple Euler equation using two different approaches. The
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vspace{5mm}
-\section*{Problem 2: Consumption-Savings using Dynamic Programming}
+\section*{Problem 4: Consumption-Savings using Dynamic Programming}
 
 We concluded Problem 1 by deriving the household's consumption Euler equation using optimal control theory. We will now do the same using dynamic programming.
 
@@ -203,7 +277,7 @@ where $\partial_x$ denotes the partial derivative with respect to $x$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vspace{5mm}
-\section*{Problem 3: Oil Extraction}
+\section*{Problem 5: Oil Extraction}
 
 Time is continuous and indexed by $t \in [0, \infty)$. At time $t=0$, there is a finite amount of oil $x_0$. Denote by $c_t$ the rate of oil consumption at date $t$. Oil is non-renewable, so the remaining amount of oil at date $t$ is 
 \begin{equation*}

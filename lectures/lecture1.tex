@@ -754,7 +754,7 @@ for all $x$ in the state space
 
 \item The value function $V(\cdot)$ is a fixed point of the operator $B$:
 \begin{align*}
-	(BV)(x) &= \max_{x'} \Big\{ F(x, x') + \beta w(x') \Big\} \\
+	(BV)(x) &= \max_{x'} \Big\{ F(x, x') + \beta V(x') \Big\} \\
 	&= V(x)
 \end{align*}
 
@@ -870,4 +870,26 @@ What about capital?
 
 \end{frame}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{2. Discussion}
+
+\begin{witemize}
+\item Make it a habit to always define equilibrium rigorously
+
+	{\footnotesize Save yourself from countless mistakes and help others understand what you do}
+
+\item One takeaway from this course: ``best-practice'' for setting up and presenting models
+
+\item In macro, we write our models in terms of agents making decisions, then aggregate up 
+
+	{\footnotesize Set up + present each agent's problem rigorously (Lucas Critique, ``microfoundations''}
+
+\item Rule of thumb: get to your equilibrium definition as quickly as possible; 
+
+	{\footnotesize Keep intermediate results and digressions for after}
+
+\item Planning problem vs. competitive equilibrium?
+\end{witemize}
+\end{frame}
 \end{document}
