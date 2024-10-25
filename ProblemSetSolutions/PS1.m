@@ -59,7 +59,8 @@ hold on
 plot(t, 1.4094*exp(0.5*(0.02*t+.5*0.01*t.^2)), '-r', 'LineWidth', 1) % Analytical solution as thick red line
 xlabel('Time (t)'); % Add x label
 ylabel('Consumption (C)'); % Add y label
-legend('Numerical Solution', 'Analytical Solution')
+yline(2, '--r', 'LineWidth', 1.5, 'Label', 'Target Consumption at Time 10'); % Add horizontal line at y=2 with label
+legend('Numerical Solution', 'Analytical Solution','Location', 'northwest')
 hold off
 % save 
 saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolutions/ConsumptionEvolutionNumerical_100Steps.png')
@@ -89,7 +90,8 @@ scatter(t100, C100, 'x', 'LineWidth', .01) % Numerical solution as scatter plot 
 plot(t, 1.4094*exp(0.5*(0.02*t+.5*0.01*t.^2)), '-r', 'LineWidth', 1) % Analytical solution as thick red line
 xlabel('Time (t)'); % Add x label
 ylabel('Consumption (C)'); % Add y label
-legend('Numerical Solution (10 points)', 'Numerical Solution (100 points)', 'Analytical Solution')
+yline(2, '--r', 'LineWidth', 1.5, 'Label', 'Target Consumption at Time 10'); % Add horizontal line at y=2 with label
+legend('Numerical Solution (10 points)', 'Numerical Solution (100 points)', 'Analytical Solution', 'Location', 'northwest')
 hold off
 % save 
 saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolutions/ConsumptionNumerical10.png')
