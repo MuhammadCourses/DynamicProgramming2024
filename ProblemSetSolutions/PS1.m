@@ -94,6 +94,6 @@ yline(2, '--r', 'LineWidth', 1.5, 'Label', 'Target Consumption at Time 10'); % A
 legend('Numerical Solution (10 points)', 'Numerical Solution (100 points)', 'Analytical Solution', 'Location', 'northwest')
 hold off
 % save 
-saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolutions/ConsumptionNumerical10.png')
+saveas(gcf, '/Users/muhammadbashir/GitHub/DynamicProgramming2024/ProblemSetSolutions/ConsumptionEvolutionNumerical_10Steps.png')
 % Q.4 Discussion 
 % The numerical solution with 10 grid points is not as accurate as the one with 100 grid points. As we see once we increase no of grid points, we reach closer to the analytical solution. This is because the finite difference method is an approximation method and the accuracy of the solution depends on the number of grid points used. The more the grid points, the more accurate the solution will be.
