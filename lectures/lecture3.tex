@@ -935,20 +935,40 @@ where $\dot x_t = \frac{d}{dt} x_t$, $\rho$ is the discount rate, $c_t$ is the r
 
 \item The discrete-time Bellman equation would be
 \begin{equation*}
-	v(k_t) = \max_c \Big\{ u(c) \Delta t + \frac{1}{1 + \rho \Delta t} v(k_{t+\Delta}) \Big\}
+	v(k_t) = \max_c \Big\{ u(c) \Delta + \frac{1}{1 + \rho \Delta} v(k_{t+\Delta}) \Big\}
 \end{equation*}
-where $\beta = \frac{1}{1+ \rho \Delta t}$
+where $\beta = \frac{1}{1+ \rho \Delta}$
 
-\item Next: multiply by $1 + \rho \Delta t$ and note that $(\Delta t)^2 \approx 0$
+\item Next: multiply by $1 + \rho \Delta$ 
 \begin{align*}
-	(1 + \rho \Delta t) v(k_t) &= \max_c \Big\{ (1 + \rho \Delta t) u(c) \Delta t + v(k_{t+\Delta}) \Big\} \\
-	\rho \Delta t v(k_t) &= \max_c \Big\{ u(c) \Delta t + v(k_{t+\Delta}) - v(k_t) \Big\} \\
-	\rho v(k_t) &= \max_c \Big\{ u(c) + \frac{v(k_{t+\Delta}) - v(k_t)}{\Delta t} \Big\}
+	(1 + \rho \Delta) v(k_t) &= \max_c \Big\{ (1 + \rho \Delta) u(c) \Delta + v(k_{t+\Delta}) \Big\} \\
+	\rho \Delta v(k_t) &= \max_c \Big\{ u(c) \Delta + \rho u(c) \Delta^2 + v(k_{t+\Delta}) - v(k_t) \Big\} \\
+	\rho v(k_t) &= \max_c \Big\{ u(c) + \rho u(c) \Delta + \frac{v(k_{t+\Delta}) - v(k_t)}{\Delta} \Big\}
+\end{align*}
+\end{witemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+\begin{align*}
+	\rho v(k_t) &= \max_c \Big\{ u(c) + \rho u(c) \Delta + \frac{v(k_{t+\Delta}) - v(k_t)}{\Delta} \Big\}
 \end{align*}
 
-\item Finally: take limit $\Delta t \to 0$ and drop $t$ subscripts
+\vspace{4mm}
+\begin{witemize}
+\item Now we take limit $\Delta \to 0$ 
+
+\item Notice $\rho u(c) \Delta \to 0$ and also
 \begin{equation*}
-	\rho v(k) = \max_c \Big\{ u(c) + dv \Big\}
+	\lim_{\Delta \to 0} \frac{v(k_{t+\Delta}) - v(k_t)}{\Delta} =
+	\lim_{\Delta \to 0} \frac{v(k(t+\Delta)) - v(k(t))}{\Delta} =
+	\frac{d v(k(t))}{dt}
+\end{equation*}
+
+\item Therefore we arrive at
+\begin{equation*}
+	\rho v(k(t)) = \max_c \Big\{ u(c) + \frac{dv(k(t))}{dt} \Big\}
 \end{equation*}
 \end{witemize}
 \end{frame}
@@ -958,24 +978,16 @@ where $\beta = \frac{1}{1+ \rho \Delta t}$
 %%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{}
 \begin{witemize}
-\item We want to express $dv$ in terms of $v'(\cdot)$ and $dk$
+\item Only step left for us to do: What is $\frac{dv(k(t))}{dt}$?
 
-\item Different ways to think about this: chain rule, Ito's lemma (though no uncertainty here), generator
-
-\item Recall generator of (stochastic) process $dk_t$: For any $f(\cdot)$
-\begin{equation*}
-	\mathcal A f(k_t) = \lim_{\Delta t \to 0} \mathbb{E}_t \frac{ f(k_{t + \Delta t}) - f(k_t) }{\Delta t}
-\end{equation*}
-
-\item For simple ODE (no uncertainty) $dk = (F(k) - \delta k - c) dt$, we have
-\begin{equation*}
-	\mathcal A f(k) = (F(k) - \delta k - c) f'(k)
-\end{equation*}
+\item Simply use Chain rule! $\frac{dv(k(t))}{dt} = \frac{dv}{dk} \frac{dk}{dt}$ and recall $\frac{dk}{dt} = F(k) - \delta k - c$
 
 \item Therefore, we arrive at the \textbf{Hamilton-Jacobi-Bellman equation}:
 \begin{equation*}
 	\rho v(k) = \max_c \Big\{ u(c) + \Big( F(k) - \delta k - c \Big) v'(k) \Big\}
 \end{equation*}
+
+\item We drop $t$ subscripts for clarity: this equation holds for all possible $k$
 
 \item Notice: We conjectured a stationary value function (what does this mean?)
 \end{witemize}
@@ -1082,19 +1094,19 @@ Connection between calculus of variations and HJB:
 
 {\small
 \begin{itemize}
-\item This is really important: everything we have done so far is only valid in the \textbf{interior of the state space}
+\item Important: everything we have done so far is only valid in the \textbf{interior of the state space}
 
 \item What's the state space of a model? 
 
 \item For the neoclassical growth model without uncertainty, state space is $k \in [0, \infty)$, or 
 \begin{equation*}
-	\mathcal X = \Big\{ k \mid k \in [0, \bar k] \Big\}
+	\Big\{ k \mid k \in [0, \bar k] \Big\}
 \end{equation*}
-where we impose an upper boundary $\bar k$ 
+where we impose an upper boundary $\bar k$ (think about putting this on the computer)
 
 \item This is like the domain of the function $v(k)$ that will be valid 
 
-\item We say $\partial \mathcal X = \{ 0, \bar k \}$ is the \textbf{boundary} of the state space and $\mathcal X \backslash \partial \mathcal X = (0, \bar k)$ is the \textbf{interior}
+\item We say $\{ 0, \bar k \}$ is the \textbf{boundary} of the state space and $(0, \bar k)$ is the \textbf{interior}
 
 \item As is the case \textbf{for all differential equations}, the HJB holds on the interior and we need \textbf{boundary conditions} to characterize $v(k)$ along the boundary 
 \end{itemize}
@@ -1108,15 +1120,14 @@ where we impose an upper boundary $\bar k$
 
 {\small
 \begin{witemize}
-\item What kind of differential equation is the HJB in this model?
+\item What differential equation is HJB in this model? How many boundary conditions do we need?
 
-\item So how many boundary conditions do we need?
+\item In terms of the economics, what is correct economic behavior at the boundary $k \in \{0, \bar k\}$? 
 
-\item In terms of the economics, what is the correct boundary condition? I.e., what is the correct economic behavior at the boundary $k \in \{0, \bar k\}$? 
+\pause
+\item We want households to not leave the state space, so we impose that they do not dissave / borrow as $k \to 0$ and save as $k \to \bar k$
 
 \item Nice intuition: 2 boundary inequalities do same job as 1 boundary equality
-
-\item We want households to not leave the state space, so we impose that they do not dissave / borrow as $k \to 0$ and save as $k \to \bar k$
 
 \item This implies: (why?)
 \begin{align*}
@@ -1124,7 +1135,7 @@ where we impose an upper boundary $\bar k$
 	u'(c(\bar k)) &\leq v'(\bar k)
 \end{align*}
 
-\item  If households ever hit the boundaries (in the neoclassical growth model, this doesn't really happen), then consumption behavior is no longer determined by the Euler equations but rather by the boundary conditions 
+\item In neoclassical growth model, Inada conditions take care of this (you never reach boundary) 
 
 \end{witemize}
 }
@@ -1204,7 +1215,6 @@ where $E$ and $U$ solve the coupled system of HJBs
 
 \item Turns out: state-of-the-art dynamic migration model (Caliendo-Dvorkin-Parro) is a simple application of our tools
 
-\item Here: also add dynamic consumption-savings problem
 \end{witemize}
 \end{frame}
 
@@ -1221,12 +1231,9 @@ There are $N$ regions indexed by $j$. Consider a household $i$ and denote her re
 \begin{witemize}
 \item Household inelastically supplies $1$ unit of labor, earns wage $w_{j_{i, t}}$
 
-\item They have a checking account and face budget constraint 
-\begin{equation*}
-	\dot a_{i, t} = r a_{i, t} + w_{j_{i, t}} - c_{i, t}
-\end{equation*}
+\item For simplicity: They cannot save or borrow, so $c_{i, t} = w_{j_{i, t}}$ (``hand-to-mouth'')
 
-\item Problem will be stationary because $r$ and $w_j$ are time-invariant
+\item Problem will be stationary because $w_j$ are time-invariant
 \end{witemize}
 \end{frame}
 
@@ -1245,14 +1252,15 @@ There are $N$ regions indexed by $j$. Consider a household $i$ and denote her re
 \vspace{5mm}
 \textbf{Recursive representation:}
 \begin{equation*}
-	\rho V(j, a) = \max_c \Big\{ u(c) 
-	\underbrace{\vphantom{\max_k}
-		+ (r a + w_j - c) V_a(j, a) 
-	}_\text{consumption-savings}
-	\underbrace{
-		+ \mu \Big( \mathbb E \Big[ \max_k V(k, a) - \kappa_{jk} + \epsilon_k \Big] - V(j, a) \Big) \Big\}
-	}_\text{migration}
+	\rho V_j = u(w_j) 
+	+ \mu \Big( \mathbb E \Big[ \max_k V_k - \kappa_{jk} + \epsilon_k \Big] - V_j \Big) 
 \end{equation*}
+
+\begin{witemize}
+\item Using extreme-value taste shocks $\to$ nice expression for migration flows
+
+\item Incredibly easy to solve on computer using tools you're learning in Section
+\end{witemize}
 \end{frame}
 
 
@@ -1436,6 +1444,66 @@ Best response strategies: $0 = \mu + \gamma \theta \mu (\tau^B(\mu) - \tau^A)^{\
 
 
 
-
-
 \end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{2. Urban / trade / dynamic spatial: migration}
+\begin{witemize}
+\item One of most important themes in urban, trade, international and dynamic spatial literatures: people move (migrate) in response to shocks
+
+	{\footnotesize For example: To what extent do households migrate in response to China trade shock or climate change?}
+
+\item Turns out: state-of-the-art dynamic migration model (Caliendo-Dvorkin-Parro) is a simple application of our tools
+
+\item Here: also add dynamic consumption-savings problem
+\end{witemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+\textbf{Households:} 
+There are $N$ regions indexed by $j$. Consider a household $i$ and denote her region $j_{i, t}$. Lifetime utility is 
+\begin{equation*}
+	V_{i, 0} = \max \mathbb E \int_0^\infty e^{- \rho t} u(c_{i, t}) dt
+\end{equation*}
+
+\begin{witemize}
+\item Household inelastically supplies $1$ unit of labor, earns wage $w_{j_{i, t}}$
+
+\item They have a checking account and face budget constraint 
+\begin{equation*}
+	\dot a_{i, t} = r a_{i, t} + w_{j_{i, t}} - c_{i, t}
+\end{equation*}
+
+\item Problem will be stationary because $r$ and $w_j$ are time-invariant
+\end{witemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%  SLIDE   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{}
+
+\textbf{Migration:} discrete-choice optimal stopping problem
+\vspace{4mm}
+\begin{witemize}
+\item Households face fixed cost $\kappa_{jk}$ to move from $j$ to $k$
+
+\item \textbf{Key trick:} At rate $\mu$, household draws opportunity and \textbf{extreme-value taste shock} $\epsilon_k$ with shape parameter $\theta$ for possible destinations $k$
+\end{witemize}
+
+\vspace{5mm}
+\textbf{Recursive representation:}
+\begin{equation*}
+	\rho V(j, a) = \max_c \Big\{ u(c) 
+	\underbrace{\vphantom{\max_k}
+		+ (r a + w_j - c) V_a(j, a) 
+	}_\text{consumption-savings}
+	\underbrace{
+		+ \mu \Big( \mathbb E \Big[ \max_k V(k, a) - \kappa_{jk} + \epsilon_k \Big] - V(j, a) \Big) \Big\}
+	}_\text{migration}
+\end{equation*}
+\end{frame}
+
