@@ -1,0 +1,477 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>PS2_Coding</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-11-04">
+<meta name="DC.source" content="PS2_Coding.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">1. DEFINE PARAMETERS</a>
+</li>
+<li>
+<a href="#3">2. INITIALIZE GRID POINTS</a>
+</li>
+<li>
+<a href="#4">4. SHOOTING ALGORITHM</a>
+</li>
+<li>
+<a href="#5">Implied interest rate</a>
+</li>
+<li>
+<a href="#6">5. PLOT</a>
+</li>
+<li>
+<a href="#7">DISCUSSION %%% % We see achieving convergence around 60th time period and we also see that interest rate is decreasing over time. This is because the economy is converging to steady state and capital is increasing which leads to lower returns due to diminishing returns to capital.</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% MATLAB Script: ramsey.m</span>
+<span class="comment">%</span>
+<span class="comment">% Author: Muhammad Bashir (Follows closely Kiyea Jin's version)</span>
+<span class="comment">% date: November 2nd 2024</span>
+<span class="comment">%</span>
+<span class="comment">% description:</span>
+<span class="comment">% this script solves the ramsey-cass-koopmans model</span>
+<span class="comment">%</span>
+<span class="comment">% the model consists of two equations:</span>
+<span class="comment">%   (dc/dt)/c = (f'(k) - rho - theta*g)/theta</span>
+<span class="comment">%   dk/dt = f(k) - c - (n+g)k</span>
+<span class="comment">% where an initial condition for capital k0 is provided,</span>
+<span class="comment">% and intertemporal budget constraint with equality is imposed as a terminal condition.</span>
+<span class="comment">%</span>
+<span class="comment">% parameters:</span>
+<span class="comment">% - Discount rate (rho): 0.03</span>
+<span class="comment">% - Inverse of IES (theta): 1</span>
+<span class="comment">% - Technology growth rate (g): 0.02</span>
+<span class="comment">% - Population growth rate (n): 0.02</span>
+<span class="comment">% - Capital share (alpha): 1/3</span>
+<span class="comment">% - TFP (A): 1</span>
+<span class="comment">% - Initial boundary condition: K0 = 10</span>
+<span class="comment">%</span>
+<span class="comment">% Code Structure:</span>
+<span class="comment">% 1. DEFINE PARAMETERS</span>
+<span class="comment">% 2. INITIALIZE GRID POINTS</span>
+<span class="comment">% 3. STEADY STATES</span>
+<span class="comment">% 4. SHOOTING ALGORITHM</span>
+<span class="comment">% 5. PLOT</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+clc;
+</pre>
+<h2 id="2">1. DEFINE PARAMETERS</h2>
+<pre class="codeinput">p = define_parameters();
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%% Q 2 fsolve to get SS k and c %%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% We need to essentialy find k and c that satisfy the following two equations:</span>
+<span class="comment">% 1. f(k) - c - (n+g)k = 0</span>
+<span class="comment">% 2. f'(k) - rho - theta*g = 0</span>
+<span class="comment">% We use functions f and f_prime defined in define_parameters.m to calculate f(k) and f'(k)</span>
+
+<span class="comment">% Define the objective function that calculates the difference between the two equations</span>
+<span class="comment">% Note: kss and css are functions of k and c</span>
+diff = @(x) [p.f(x(1)) - x(2) - (p.n + p.g) * x(1); p.f_prime(x(1)) - p.rho - p.theta * p.g];  <span class="comment">% x(1) = k, x(2) = c</span>
+
+<span class="comment">% Initial guess for k and c</span>
+x0 = [p.k0; p.k0];  <span class="comment">% Initial guess for k and c</span>
+
+<span class="comment">% Solve the system of equations using fsolve</span>
+options = optimoptions(<span class="string">'fsolve'</span>, <span class="string">'Display'</span>, <span class="string">'off'</span>);
+x = fsolve(diff, x0, options);
+
+<span class="comment">% Steady state k and c and interest rate</span>
+kss = x(1);
+css = x(2);
+disp([<span class="string">'Steady state k: '</span>, num2str(kss)]);
+disp([<span class="string">'Stedy state c: '</span>, num2str(css)]);
+disp([<span class="string">'Newton Method Interest rate(%): '</span>, num2str(100*p.f_prime(kss))]);
+
+<span class="comment">% Also print analytical sollution values for k and c</span>
+kss_analytical = ((p.rho + p.theta * p.g) / (p.alpha * p.A))^(1 / (p.alpha - 1));
+css_analytical = p.f(kss_analytical) - (p.n + p.g) * kss_analytical;
+disp([<span class="string">'Analytical Steady state k: '</span>, num2str(kss_analytical)]);
+disp([<span class="string">'Analytical Stedy state c: '</span>, num2str(css_analytical)]);
+disp([<span class="string">'Newton Method Interest rate(%): '</span>, num2str(100*p.f_prime(kss_analytical))]);
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%% Q 3 Solve Again using Newton's Method %%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+x0 = [p.k0; p.k0];  <span class="comment">% Initial guess for k and c</span>
+error = inf;
+iter = 0;  <span class="comment">% Initialize iteration counter</span>
+x = x0;  <span class="comment">% Initialize x</span>
+<span class="keyword">while</span> iter &lt; p.maxit
+    <span class="comment">% Calculate the Jacobian matrix</span>
+    J = [p.f_prime(x(1)) - (p.n + p.g), -1; -1, 1 / p.theta];
+
+    <span class="comment">% Calculate the difference</span>
+    error = diff(x);
+
+    <span class="comment">% Update x</span>
+    x = x - J \ error;
+
+    <span class="comment">% Check convergence</span>
+    <span class="keyword">if</span> norm(error) &lt; p.tol
+        <span class="keyword">break</span>;
+    <span class="keyword">end</span>
+
+    iter = iter + 1;  <span class="comment">% Increment iteration counter</span>
+<span class="keyword">end</span>
+
+<span class="comment">% display results kss, css including number of iterations and error at convergence</span>
+disp([<span class="string">'Newton Method Steady state k: '</span>, num2str(x(1))]);
+disp([<span class="string">'Newton Method Stedy state c: '</span>, num2str(x(2))]);
+disp([<span class="string">'Newton Method Interest rate(%): '</span>, num2str(100*p.f_prime(x(1)))]);
+disp([<span class="string">'Number of iterations: '</span>, num2str(iter)]);
+disp([<span class="string">'Error at convergence: '</span>, num2str(norm(error))]);
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%% Q.5 Discuss the results %%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% The results are pretty close but Newton's method is very senstive to number of iterations. When we increase iterations to 10000, we get the same results as fsolve and analytical solution.</span>
+
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%% Q.6 Shooting Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% We will use shooting algorithm to solve the model. We will use the following boundary conditions:</span>
+<span class="comment">% 1. k0 = 10</span>
+<span class="comment">% 2. kT = kss</span>
+<span class="comment">% 3. cT = css</span>
+</pre>
+<pre class="codeoutput">Steady state k: 17.2133
+Stedy state c: 1.8935
+Newton Method Interest rate(%): 5
+Analytical Steady state k: 17.2133
+Analytical Stedy state c: 1.8935
+Newton Method Interest rate(%): 5
+Newton Method Steady state k: 17.2127
+Newton Method Stedy state c: 1.8935
+Newton Method Interest rate(%): 5.0001
+Number of iterations: 4854
+Error at convergence: 9.9953e-07
+</pre>
+<h2 id="3">2. INITIALIZE GRID POINTS</h2>
+<pre class="codeinput">t = linspace(p.tmin, p.tmax, p.I)';
+dt = (p.tmax-p.tmin)/(p.I-1);
+</pre>
+<h2 id="4">4. SHOOTING ALGORITHM</h2>
+<pre class="codeinput">        <span class="comment">% 4-1. Find the initial value of consumption that satisfies terminal boundary condition</span>
+
+        tic;
+        <span class="comment">% Objective function that calculates the difference between terminal capital k(T) and steady-state kss</span>
+        <span class="comment">% Note: k(T)-kss is a function of c0</span>
+        diff = @(c0) terminal_condition(c0, p.k0, kss, p.f, p.f_prime, p.rho, p.theta, p.g, p.n, dt, p.I);
+
+        <span class="comment">% Guess an initial value of consumption</span>
+        c0_guess = 1;
+
+        <span class="comment">% Use fsolve to find the initial consumption c0 that makes k(T) = k_ss</span>
+        <span class="comment">% Note: X = fsolve(FUN, X0, options) starts at the matrix X0 and tries to solve the equations in FUN.</span>
+        <span class="comment">% Set OPTIONS = optimoptions('fsolve','Algorithm','trust-region'), and then pass OPTIONS to fsolve.</span>
+        options = optimoptions(<span class="string">'fsolve'</span>, <span class="string">'TolFun'</span>, p.tol, <span class="string">'Display'</span>, <span class="string">'iter'</span>);
+        c0 = fsolve(diff, c0_guess, options);
+
+<span class="comment">% 4-2. Forward simulate with the updated initial consumption</span>
+
+[k, c] = forward_simulate(c0, p.k0, p.f, p.f_prime, p.rho, p.theta, p.g, p.n, dt, p.I);
+toc;
+</pre>
+<h2 id="5">Implied interest rate</h2>
+<pre class="codeinput">r_t = p.f_prime(k);
+</pre>
+<pre class="codeoutput">
+                                             Norm of      First-order   Trust-region
+ Iteration  Func-count     ||f(x)||^2           step       optimality         radius
+     0          2             6549.24                        2.67e+03              1
+     1          3             6549.24              1         2.67e+03              1
+     2          5             4481.43           0.25         7.09e+03           0.25
+     3          6             4481.43          0.625         7.09e+03          0.625
+     4          7             4481.43        0.15625         7.09e+03          0.156
+     5          9             3832.38      0.0390625         9.82e+03         0.0391
+     6         10             3832.38      0.0976562         9.82e+03         0.0977
+     7         12              3282.9      0.0244141          1.3e+04         0.0244
+     8         14              102.78      0.0610352         4.91e+04          0.061
+     9         16             35.0699     0.00209295          8.1e+04          0.153
+    10         18            0.935949    0.000433197          9.4e+03          0.153
+    11         20         0.000872267    9.95919e-05              270          0.153
+    12         22          8.1712e-10    3.23336e-06            0.261          0.153
+    13         24         3.88012e-20     3.1355e-09          1.8e-06          0.153
+    14         26         2.26637e-25    2.16067e-14         4.34e-09          0.153
+
+Equation solved.
+
+fsolve completed because the vector of function values is near zero
+as measured by the value of the function tolerance, and
+the problem appears regular as measured by the gradient.
+
+Elapsed time is 0.049052 seconds.
+</pre>
+<h2 id="6">5. PLOT</h2>
+<pre class="codeinput">
+<span class="comment">% 5-1. Evolution of capital and consumption</span>
+
+figure;
+subplot(3,1,1);
+plot(t, k, <span class="string">'r-'</span>, <span class="string">'LineWidth'</span>, 2);
+xlabel(<span class="string">'Time'</span>); ylabel(<span class="string">'Capital k(t)'</span>);
+title(<span class="string">'Capital Accumulation over Time'</span>);
+
+subplot(3,1,2);
+plot(t, c, <span class="string">'b-'</span>, <span class="string">'LineWidth'</span>, 2);
+xlabel(<span class="string">'Time'</span>); ylabel(<span class="string">'Consumption c(t)'</span>);
+title(<span class="string">'Consumption Growth over Time'</span>);
+
+subplot(3,1,3);
+plot(t, r_t, <span class="string">'g-'</span>, <span class="string">'LineWidth'</span>, 2);
+xlabel(<span class="string">'Time'</span>); ylabel(<span class="string">'Interest Rate r(t)'</span>);
+title(<span class="string">'Interest Rate over Time'</span>);
+</pre>
+<h2 id="7">DISCUSSION %%% % We see achieving convergence around 60th time period and we also see that interest rate is decreasing over time. This is because the economy is converging to steady state and capital is increasing which leads to lower returns due to diminishing returns to capital.</h2>
+<img vspace="5" hspace="5" src="PS2_Coding_01.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MATLAB Script: ramsey.m
+%
+% Author: Muhammad Bashir (Follows closely Kiyea Jin's version)
+% date: November 2nd 2024
+%
+% description:
+% this script solves the ramsey-cass-koopmans model
+%
+% the model consists of two equations:
+%   (dc/dt)/c = (f'(k) - rho - theta*g)/theta
+%   dk/dt = f(k) - c - (n+g)k
+% where an initial condition for capital k0 is provided,
+% and intertemporal budget constraint with equality is imposed as a terminal condition.
+%
+% parameters:
+% - Discount rate (rho): 0.03
+% - Inverse of IES (theta): 1
+% - Technology growth rate (g): 0.02
+% - Population growth rate (n): 0.02
+% - Capital share (alpha): 1/3
+% - TFP (A): 1
+% - Initial boundary condition: K0 = 10
+%
+% Code Structure:
+% 1. DEFINE PARAMETERS
+% 2. INITIALIZE GRID POINTS
+% 3. STEADY STATES
+% 4. SHOOTING ALGORITHM
+% 5. PLOT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clear all;
+close all;
+clc;
+
+%% 1. DEFINE PARAMETERS
+
+p = define_parameters();
+
+%%%%%%%%%%%%%%%%%%%%% Q 2 fsolve to get SS k and c %%%%%%%%%%%%%%%%%%%%%%%%
+% We need to essentialy find k and c that satisfy the following two equations:
+% 1. f(k) - c - (n+g)k = 0
+% 2. f'(k) - rho - theta*g = 0
+% We use functions f and f_prime defined in define_parameters.m to calculate f(k) and f'(k)
+
+% Define the objective function that calculates the difference between the two equations
+% Note: kss and css are functions of k and c
+diff = @(x) [p.f(x(1)) - x(2) - (p.n + p.g) * x(1); p.f_prime(x(1)) - p.rho - p.theta * p.g];  % x(1) = k, x(2) = c
+
+% Initial guess for k and c
+x0 = [p.k0; p.k0];  % Initial guess for k and c
+
+% Solve the system of equations using fsolve
+options = optimoptions('fsolve', 'Display', 'off');
+x = fsolve(diff, x0, options);
+
+% Steady state k and c and interest rate
+kss = x(1);
+css = x(2);
+disp(['Steady state k: ', num2str(kss)]);
+disp(['Stedy state c: ', num2str(css)]);
+disp(['Newton Method Interest rate(%): ', num2str(100*p.f_prime(kss))]);
+
+% Also print analytical sollution values for k and c
+kss_analytical = ((p.rho + p.theta * p.g) / (p.alpha * p.A))^(1 / (p.alpha - 1));
+css_analytical = p.f(kss_analytical) - (p.n + p.g) * kss_analytical;
+disp(['Analytical Steady state k: ', num2str(kss_analytical)]);
+disp(['Analytical Stedy state c: ', num2str(css_analytical)]);
+disp(['Newton Method Interest rate(%): ', num2str(100*p.f_prime(kss_analytical))]);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Q 3 Solve Again using Newton's Method %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+x0 = [p.k0; p.k0];  % Initial guess for k and c
+error = inf;
+iter = 0;  % Initialize iteration counter
+x = x0;  % Initialize x
+while iter < p.maxit
+    % Calculate the Jacobian matrix
+    J = [p.f_prime(x(1)) - (p.n + p.g), -1; -1, 1 / p.theta];
+    
+    % Calculate the difference
+    error = diff(x);
+    
+    % Update x
+    x = x - J \ error;
+    
+    % Check convergence
+    if norm(error) < p.tol
+        break;
+    end
+    
+    iter = iter + 1;  % Increment iteration counter
+end
+
+% display results kss, css including number of iterations and error at convergence
+disp(['Newton Method Steady state k: ', num2str(x(1))]);
+disp(['Newton Method Stedy state c: ', num2str(x(2))]);
+disp(['Newton Method Interest rate(%): ', num2str(100*p.f_prime(x(1)))]);
+disp(['Number of iterations: ', num2str(iter)]);
+disp(['Error at convergence: ', num2str(norm(error))]);
+
+%%%%%%%%%%%%%%%%%%%%%% Q.5 Discuss the results %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The results are pretty close but Newton's method is very senstive to number of iterations. When we increase iterations to 10000, we get the same results as fsolve and analytical solution.
+
+%%%%%%%%%%%%%%%%%%%%%% Q.6 Shooting Algorithm %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% We will use shooting algorithm to solve the model. We will use the following boundary conditions:
+% 1. k0 = 10
+% 2. kT = kss
+% 3. cT = css
+
+%% 2. INITIALIZE GRID POINTS
+
+t = linspace(p.tmin, p.tmax, p.I)';
+dt = (p.tmax-p.tmin)/(p.I-1);
+
+%% 4. SHOOTING ALGORITHM
+
+        % 4-1. Find the initial value of consumption that satisfies terminal boundary condition
+    
+        tic;
+        % Objective function that calculates the difference between terminal capital k(T) and steady-state kss
+        % Note: k(T)-kss is a function of c0
+        diff = @(c0) terminal_condition(c0, p.k0, kss, p.f, p.f_prime, p.rho, p.theta, p.g, p.n, dt, p.I);
+        
+        % Guess an initial value of consumption
+        c0_guess = 1;
+
+        % Use fsolve to find the initial consumption c0 that makes k(T) = k_ss
+        % Note: X = fsolve(FUN, X0, options) starts at the matrix X0 and tries to solve the equations in FUN.
+        % Set OPTIONS = optimoptions('fsolve','Algorithm','trust-region'), and then pass OPTIONS to fsolve.
+        options = optimoptions('fsolve', 'TolFun', p.tol, 'Display', 'iter');
+        c0 = fsolve(diff, c0_guess, options);
+
+% 4-2. Forward simulate with the updated initial consumption
+
+[k, c] = forward_simulate(c0, p.k0, p.f, p.f_prime, p.rho, p.theta, p.g, p.n, dt, p.I);
+toc;
+
+%%% Implied interest rate
+r_t = p.f_prime(k);
+%% 5. PLOT
+
+% 5-1. Evolution of capital and consumption
+
+figure;
+subplot(3,1,1);
+plot(t, k, 'r-', 'LineWidth', 2);
+xlabel('Time'); ylabel('Capital k(t)');
+title('Capital Accumulation over Time');
+
+subplot(3,1,2);
+plot(t, c, 'b-', 'LineWidth', 2);
+xlabel('Time'); ylabel('Consumption c(t)');
+title('Consumption Growth over Time');
+
+subplot(3,1,3);
+plot(t, r_t, 'g-', 'LineWidth', 2);
+xlabel('Time'); ylabel('Interest Rate r(t)');
+title('Interest Rate over Time');
+
+%%% DISCUSSION %%%
+% We see achieving convergence around 60th time period and we also see that interest rate is decreasing over time. This is because the economy is converging to steady state and capital is increasing which leads to lower returns due to diminishing returns to capital.
+
+##### SOURCE END #####
+-->
+</body>
+</html>
