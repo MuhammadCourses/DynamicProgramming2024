@@ -16,12 +16,12 @@
 % - CRRA utility function: U(c) = (c^(1-gamma))/(1-gamma)
 % - Production function: f(k) = A*k^alpha
 % - Relative risk aversion coefficient (gamma): 2
-% - Discount rate (rho): 0.03
-% - Depreciation rate (delta): 0.025
-% - Elasticity of output with respect to capital (alpha): 1/3
-% - Total fator productivity (A): 1
+% - Discount rate (rho): 0.05
+% - Interest Rate (r): 0.03
+% - Transition Rates (lambda_e, lambda_u): 0.03, 0.02
+% - Incomes in employed and unemployed states (ze, zu): 0.2, 0.1
+% - Borrowing Constraint: amin = -0.02
 % - Delta = 1000 (Can be arbitrarily large in implicit method)
-% - Try with rho = delta = 0.05
 % 
 % Code Structure:
 % 1. DEFINE PARAMETERS
@@ -40,15 +40,15 @@ p = define_parameters();
 
 %% 2. INITIALIZE GRID POINTS
 
-% Steady-state level of capital: f'(kss)=rho+delta
-kss = ((p.rho+p.delta)/(p.A*p.alpha))^(1/(p.alpha-1));
-
 % log(k_min) = log(kss)-p.klim
-k_min = kss*exp(-p.klim); 
-k_max = kss*exp(p.klim);
+a_min = a_min;
+a_max = 2;       % This is what Bell Moll uses
 
-k = linspace(k_min, k_max, p.I)';
-dk = (k_max-k_min)/(p.I-1);
+a = linspace(a_min, a_max, p.I);        % Grid for wealth
+da = (a_max - a_min)/(p.I-1);       % Grid size
+
+% Every period we are going to have two wealth levels for employed and unemployed 
+aa [a,a];
 
 %% 3. PRE-ITERATION INITIALIZATION
 
@@ -57,13 +57,13 @@ dk = (k_max-k_min)/(p.I-1);
 
     Df = zeros(p.I, p.I);
     for i = 1:p.I-1
-        Df(i,i) = -1/dk; Df(i,i+1) = 1/dk;
+        Df(i,i) = -1/dk; Df(i,i+1) = 1/dk;      % Forward differencing
     end
     %Df = sparse(Df);
 
     Db = zeros(p.I, p.I);
     for i = 2:p.I
-        Db(i,i-1) = -1/dk; Db(i,i) = 1/dk;
+        Db(i,i-1) = -1/dk; Db(i,i) = 1/dk;    % Backward differencing
     end
     %Db = sparse(Db);
 
