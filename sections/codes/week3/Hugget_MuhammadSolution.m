@@ -155,13 +155,14 @@ for n = 1:p.maxit
 end
 
 toc;
-
-% Graphs
+%% 5. Graphs
+figure
 set(gca,'FontSize',14)
 plot(dist,'LineWidth',2)
 grid
 xlabel('Iteration')
 ylabel('||V^{n+1} - V^n||')
+title('Convergence')
 
 
 % Verr = c.^(1-s)/(1-s) + dV_Upwind.*(zz + r.*aa - c) + ones(I,1)*la.*(V_switch - V) - rho.*V;
@@ -175,6 +176,8 @@ ylabel('||V^{n+1} - V^n||')
 
 adot = zz + p.r.*aa - c;
 
+% Plot of Value function
+figure
 set(gca,'FontSize',12)
 plot(a,V,'LineWidth',2)
 grid
@@ -182,7 +185,10 @@ xlabel('a')
 ylabel('V_i(a)')
 xlim([p.a_min p.a_max])
 legend('Employed','Unemployed', 'Location', 'northwest')
+title('Value Function as a function of Wealth')
 
+% Plot of Consumption function
+figure
 set(gca,'FontSize',14)
 plot(a,c,'LineWidth',2)
 grid
@@ -190,7 +196,10 @@ xlabel('a')
 ylabel('c_i(a)')
 xlim([p.a_min p.a_max])
 legend('Employed','Unemployed', 'Location', 'northwest')
+title('Evolution of Consumption Policy Function')
 
+% Plot of Savings function
+figure
 set(gca,'FontSize',14)
 plot(a,adot,a,zeros(1,p.I),'--','LineWidth',2)
 grid
@@ -198,6 +207,7 @@ xlabel('a')
 ylabel('s_i(a)')
 xlim([p.a_min p.a_max])
 legend('Employed','Unemployed', 'Location', 'northeast')
+title('Evolution of Savings Function')
 
 % Plot distribution of wealth (pdf)
 % Empirical PDF of wealth
@@ -234,5 +244,11 @@ xlabel('a')
 ylabel('CDF')
 legend('Employed', 'Unemployed', 'Location', 'northwest')
 title('Empirical CDF of Wealth Distribution')
+
+% In general, employed people always consume more across the wealth
+% distribution. Those employed with low wealth, save more and accumulate
+% wealth while very wealthy people dissave even if they are employed or
+% unemployed. At all wealth levels in this set up, employed people have
+% more continution value then unemployed people. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
