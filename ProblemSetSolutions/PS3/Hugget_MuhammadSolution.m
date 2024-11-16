@@ -54,7 +54,7 @@ da = (a_max - a_min)/(p.I-1);       % Grid size
 % Every period we are going to have two wealth levels for employed and unemployed 
 aa = [a,a];
 zz = ones(p.I,1)*p.z;       % Income grid
-Aswitch = [-speye(p.I)*p.la(1),speye(p.I)*p.la(1);speye(p.I)*p.la(2),-speye(p.I)*p.la(2)]; % Transition matrix, same as our definitions in slides, but I just copied Benn Moll's definition.
+Aswitch = [-speye(p.I)*p.la(1),speye(p.I)*p.la(1);speye(p.I)*p.la(2),-speye(p.I)*p.la(2)]; % Transition matrix, same as our definitions in slides, but I just copied Benn Moll's definition. This is a 2I x 2I matrix that brings together generator and differential operator of value function.
 
 %% 3. PRE-ITERATION INITIALIZATION
 
@@ -75,8 +75,8 @@ Aswitch = [-speye(p.I)*p.la(1),speye(p.I)*p.la(1);speye(p.I)*p.la(2),-speye(p.I)
 
 % 3-2. Guess an initial value of the value function (I evalulate utility at the income paths, follows Benn Moll!)
 
-    v0(:,1) = p.u(p.z(1)+p.r.*a)/p.rho;
-    v0(:,2) = p.u(p.z(2)+p.r.*a)/p.rho;
+    v0(:,1) = p.u(p.z(1)+p.r.*a)/p.rho;             % Initial guess for the value function, assumes savings = 0
+    v0(:,2) = p.u(p.z(2)+p.r.*a)/p.rho;             % Initial guess for the value function, assumes savings = 0
 
     v = v0;   
 
