@@ -1,0 +1,765 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>Huggett_GE_NewtonMethod</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-11-26">
+<meta name="DC.source" content="Huggett_GE_NewtonMethod.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">1. DEFINE PARAMETERS</a>
+</li>
+<li>
+<a href="#3">2. INITIALIZE GRID POINTS</a>
+</li>
+<li>
+<a href="#4">3. PRE-ITERATION INITIALIZATION</a>
+</li>
+<li>
+<a href="#5">3-3. Guess an initial value of the interest rate</a>
+</li>
+<li>
+<a href="#6">3-4. Guess an initial value of the value function</a>
+</li>
+<li>
+<a href="#7">4. VALUE FUNCTION ITERATION</a>
+</li>
+<li>
+<a href="#9">4. VALUE FUNCTION ITERATION</a>
+</li>
+<li>
+<a href="#10">5. KF EQUATION</a>
+</li>
+<li>
+<a href="#11">5-4. COMPUTE VARIABLES FOR A GIVEN r_r(nr)</a>
+</li>
+<li>
+<a href="#12">5-5. UPDATE INTEREST RATE</a>
+</li>
+<li>
+<a href="#14">6. GRAPHS</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<span class="comment">% MATLAB Code: HJB_Huggett_GE</span>
+<span class="comment">%</span>
+<span class="comment">% Author: Muhammad (Modified section code from Kiyea)</span>
+<span class="comment">% Date: Nov 7, 2024</span>
+<span class="comment">%</span>
+<span class="comment">% Description:</span>
+<span class="comment">% This MATLAB script solves the general equilibrium of the Huggett model,</span>
+<span class="comment">% finding the equilibrium interest rate that clears the bond market.</span>
+<span class="comment">%</span>
+<span class="comment">% Reference: Huggett_equilibrium_iterate.m by Benjamin Moll</span>
+<span class="comment">%</span>
+<span class="comment">% Notes:</span>
+<span class="comment">% - CRRA utility function: U(c) = (c^(1-sigma))/(1-sigma)</span>
+<span class="comment">% - Elasticity of intertemporal substitution (sigma): 2</span>
+<span class="comment">% - Discount rate (rho): 0.05</span>
+<span class="comment">% - Income: z = [z_u, z_e] = [0.1, 0.2];</span>
+<span class="comment">% - Lambda: la = [la_u, la_e] = [1.2, 1.2];</span>
+<span class="comment">% - Discrete grid of asset levels (a): -0.15 to 5</span>
+<span class="comment">% - Borrowing constraint: a&gt;=-0.15</span>
+<span class="comment">% - Delta = 1000; (Can be arbitrarily large in implicit method)</span>
+<span class="comment">%</span>
+<span class="comment">% Code Structure:</span>
+<span class="comment">% 1. DEFINE PARAMETERS</span>
+<span class="comment">% 2. INITIALIZE GRID POINTS</span>
+<span class="comment">% 3. PRE-ITERATION INITIALIZATION</span>
+<span class="comment">% 4. VALUE FUNCTION ITERATION</span>
+<span class="comment">% 5. KF EQUATION</span>
+<span class="comment">% 6. GRAPHS</span>
+<span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+clear <span class="string">all</span>;
+close <span class="string">all</span>;
+clc;
+</pre>
+<h2 id="2">1. DEFINE PARAMETERS</h2>
+<pre class="codeinput">p = define_parameters_GE();
+</pre>
+<pre class="codeoutput error">Unrecognized function or variable 'define_parameters_GE'.
+
+Error in Huggett_GE_NewtonMethod (line 38)
+p = define_parameters_GE();
+    ^^^^^^^^^^^^^^^^^^^^^^</pre>
+<h2 id="3">2. INITIALIZE GRID POINTS</h2>
+<pre class="codeinput">a = linspace(p.amin, p.amax, p.I)';
+da = (p.amax-p.amin)/(p.I-1);
+
+aa = [a, a]; <span class="comment">% I*2 matrix</span>
+
+        <span class="comment">% %% 2-2. INITIALIZE GRID POINTS FOR INTEREST RATES</span>
+        <span class="comment">%</span>
+        <span class="comment">% rgrid = linspace(p.rmin, p.rmax, p.Ir)';</span>
+</pre>
+<h2 id="4">3. PRE-ITERATION INITIALIZATION</h2>
+<pre class="codeinput">
+<span class="comment">% 3-1. Construct the forward and backward differential operator</span>
+<span class="comment">% Df such that Df*V=dVf and Db such that Db*V=dVb</span>
+
+    Df = zeros(p.I, p.I);
+    <span class="keyword">for</span> i = 1:p.I-1
+        Df(i,i) = -1/da; Df(i,i+1) = 1/da;
+    <span class="keyword">end</span>
+    Df = sparse(Df);
+
+    Db = zeros(p.I, p.I);
+    <span class="keyword">for</span> i = 2:p.I
+        Db(i,i-1) = -1/da; Db(i,i) = 1/da;
+    <span class="keyword">end</span>
+    Db = sparse(Db);
+
+<span class="comment">% 3-2. Construct A_switch matrix</span>
+
+    A_switch = [speye(p.I).*(-p.lambda(1)), speye(p.I).*p.lambda(1);
+                speye(p.I).*p.lambda(2), speye(p.I).*(-p.lambda(2))];
+
+<span class="comment">%A_switch = zeros(2*I, 2*I);</span>
+<span class="comment">%for i=1:I</span>
+<span class="comment">%    A_switch(i,i) = -lambda(1);</span>
+<span class="comment">%    A_switch(i,i+I) = lambda(1);</span>
+<span class="comment">%    A_switch(i+I,i) = lambda(2);</span>
+<span class="comment">%    A_switch(i+I,i+I) = -lambda(2);</span>
+<span class="comment">%end</span>
+</pre>
+<h2 id="5">3-3. Guess an initial value of the interest rate</h2>
+<pre class="codeinput">            r0 = 0.03;
+            r_min = 0.01;
+            r_max = 0.04;
+</pre>
+<h2 id="6">3-4. Guess an initial value of the value function</h2>
+<pre class="codeinput">            zz = ones(p.I, 1).*p.zz; <span class="comment">% I*2 matrix</span>
+
+            <span class="comment">% The value function of "staying put"</span>
+            r = r0;
+
+            v0 = p.u(zz + r.*aa)./p.rho;
+            V = v0;
+</pre>
+<h2 id="7">4. VALUE FUNCTION ITERATION</h2>
+<pre class="codeinput">        <span class="keyword">for</span> nr=1:p.Nr
+</pre>
+<pre class="codeinput">            r_r(nr) = r;
+            rmin_r(nr) = r_min;
+            rmax_r(nr) = r_max;
+
+            <span class="comment">% Use the value function solution from the previous interest rate iteration</span>
+            <span class="comment">% as the initial guess for the next iteration</span>
+            <span class="keyword">if</span> nr&gt;1
+               v0 = V_r(:,:,nr-1);
+               V = v0;
+            <span class="keyword">end</span>
+</pre>
+<h2 id="9">4. VALUE FUNCTION ITERATION</h2>
+<pre class="codeinput">
+<span class="keyword">for</span> n=1:p.maxit
+
+    <span class="comment">% 4-1. Compute the derivative of the value function</span>
+    dVf = Df*V;
+    dVb = Db*V;
+
+    <span class="comment">% 4-2. Boundary conditions</span>
+    dVb(1,:) = p.mu(zz(1,:) + r.*aa(1,:)); <span class="comment">% a&gt;=a_min is enforced (borrowing constraint)</span>
+    dVf(end,:) = p.mu(zz(end,:) + r.*aa(end,:)); <span class="comment">% a&lt;=a_max is enforced which helps stability of the algorithm</span>
+
+    I_concave = dVb &gt; dVf; <span class="comment">% indicator whether value function is concave (problems arise if this is not the case)</span>
+
+    <span class="comment">% 4-3. Compute the optimal consumption</span>
+    cf = p.inv_mu(dVf);
+    cb = p.inv_mu(dVb);
+
+    <span class="comment">% 4-4. Compute the optimal savings</span>
+    sf = zz + r.*aa - cf;
+    sb = zz + r.*aa - cb;
+
+    <span class="comment">% 4-5. Upwind scheme</span>
+    If = sf&gt;0;
+    Ib = sb&lt;0;
+    I0 = 1-If-Ib;
+    dV0 = p.mu(zz + r.*aa); <span class="comment">% If sf&lt;=0&lt;=sb, set s=0</span>
+
+    dV_upwind = If.*dVf + Ib.*dVb + I0.*dV0;
+
+    c = p.inv_mu(dV_upwind);
+
+    <span class="comment">% 4-6. Update value function:</span>
+    <span class="comment">% Vj^(n+1) = [(rho + 1/Delta)*I - (Sj^n*Dj^n+A_switch)]^(-1)*[u(cj^n) + 1/Delta*Vj^n]</span>
+
+    V_stacked = V(:); <span class="comment">% 2I*1 matrix</span>
+    c_stacked = c(:); <span class="comment">% 2I*1 matrix</span>
+
+    <span class="comment">% A = SD</span>
+    SD_u = spdiags(If(:,1).*sf(:,1), 0, p.I, p.I)*Df + spdiags(Ib(:,1).*sb(:,1), 0, p.I, p.I)*Db; <span class="comment">% I*I matrix</span>
+    SD_e = spdiags(If(:,2).*sf(:,2), 0, p.I, p.I)*Df + spdiags(Ib(:,2).*sb(:,2), 0, p.I, p.I)*Db; <span class="comment">% I*I matrix</span>
+    SD = [SD_u, sparse(p.I, p.I);
+         sparse(p.I, p.I), SD_e]; <span class="comment">% 2I*2I matrix</span>
+
+    <span class="comment">% P = A + A_switch</span>
+    P = SD + A_switch;
+
+    <span class="comment">% B = [(rho + 1/Delta)*I - P]</span>
+    B = (p.rho + 1/p.Delta)*speye(2*p.I) - P;
+
+    <span class="comment">% b = u(c) + 1/Delta*V</span>
+    b = p.u(c_stacked) + (1/p.Delta)*V_stacked;
+
+    <span class="comment">% V = B\b;</span>
+    V_update = B\b; <span class="comment">% 2I*1 matrix</span>
+    V_change = V_update - V_stacked;
+    V = reshape(V_update, p.I, 2); <span class="comment">% I*2 matrix</span>
+
+    <span class="comment">% 3-6. Convergence criterion</span>
+    dist(n) = max(abs(V_change));
+    <span class="keyword">if</span> dist(n)&lt;p.tol
+       disp(<span class="string">'Value function converged. Iteration = '</span>)
+       disp(n)
+       <span class="keyword">break</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+toc;
+</pre>
+<h2 id="10">5. KF EQUATION</h2>
+<pre class="codeinput">
+<span class="comment">% 5-1. Solve for 0=gdot=P'*g</span>
+
+PT = P';
+gdot_stacked = zeros(2*p.I,1);
+
+<span class="comment">% need to fix one value, otherwise matrix is singular</span>
+i_fix = 1;
+gdot_stacked(i_fix)=.1;
+
+row_fix = [zeros(1,i_fix-1),1,zeros(1,2*p.I-i_fix)];
+AT(i_fix,:) = row_fix;
+
+g_stacked = PT\gdot_stacked;
+
+<span class="comment">% 5-2. Normalization</span>
+
+g_sum = g_stacked'*ones(2*p.I,1)*da;
+g_stacked = g_stacked./g_sum;
+
+<span class="comment">% 5-3. Reshape</span>
+
+gg = reshape(g_stacked, p.I, 2);
+</pre>
+<h2 id="11">5-4. COMPUTE VARIABLES FOR A GIVEN r_r(nr)</h2>
+<p>Notes: Each matrix has dimensions p.I*2(u,e)*nr</p>
+<pre class="codeinput">            g_r(:,:,nr) = gg;
+            adot(:,:,nr) = zz + r.*aa - c;
+            V_r(:,:,nr) = V;
+            dV_r(:,:,nr) = dV_upwind;
+            c_r(:,:,nr) = c;
+
+            S(nr) = gg(:,1)'*a*da + gg(:,2)'*a*da;
+</pre>
+<h2 id="12">5-5. UPDATE INTEREST RATE</h2>
+<pre class="codeinput">        <span class="keyword">if</span> nr == 1
+            <span class="comment">% Store the initial guess</span>
+            r_old = r;
+            S_old = S(nr);
+            <span class="comment">% Update the interest rate using bisection method for the first iteration</span>
+            <span class="keyword">if</span> S(nr) &gt; 0
+            r_max = r;
+            r = 0.5 * (r_min + r_max);
+            <span class="keyword">elseif</span> S(nr) &lt; 0
+            r_min = r;
+            r = 0.5 * (r_min + r_max);
+            <span class="keyword">end</span>
+        <span class="keyword">else</span>
+            <span class="comment">% Use Newton's method for subsequent iterations</span>
+            dr = (S(nr) - S_old) / (r - r_old);
+            r_old = r;
+            S_old = S(nr);
+            r = r - S(nr) / dr;
+        <span class="keyword">end</span>
+
+        <span class="comment">% Check if the new interest rate is within bounds</span>
+        <span class="keyword">if</span> r &lt; r_min || r &gt; r_max
+            r = 0.5 * (r_min + r_max);
+        <span class="keyword">end</span>
+
+        <span class="comment">% Check for convergence</span>
+        <span class="keyword">if</span> abs(S(nr)) &lt; p.tol_S
+            disp(<span class="string">'Equilibrium Found, Interest rate ='</span>)
+            disp(r)
+            <span class="keyword">break</span>
+        <span class="keyword">end</span>
+</pre>
+<pre class="codeinput">
+<span class="keyword">end</span>
+
+disp(<span class="string">"Algorithm converged"</span>)
+</pre>
+<h2 id="14">6. GRAPHS</h2>
+<pre class="codeinput">
+<span class="comment">% 6-1. Optimal consumption</span>
+figure;
+set(gca, <span class="string">'FontSize'</span>, 18)
+plot(a, c_r(:,1,nr), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(a, c_r(:,2,nr), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'b'</span>)
+hold <span class="string">off</span>
+grid
+xlabel(<span class="string">'Wealth, a'</span>,<span class="string">'FontSize'</span>, 14)
+ylabel(<span class="string">'Consumption, c_j(a)'</span>,<span class="string">'FontSize'</span>, 14)
+xlim([p.amin p.amax])
+legend(sprintf(<span class="string">'Unemployed, r=%.4f'</span>, r), <span class="keyword">...</span>
+       sprintf(<span class="string">'Employed, r=%.4f'</span>, r), <span class="string">'Location'</span>, <span class="string">'best'</span>, <span class="string">'FontSize'</span>, 14)
+
+<span class="comment">% 6-2. Optimal savings</span>
+figure;
+
+set(gca, <span class="string">'FontSize'</span>, 18)
+plot(a, adot(:,1,nr), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(a, adot(:,2,nr), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'b'</span>)
+hold <span class="string">off</span>
+grid
+xlabel(<span class="string">'Wealth, a'</span>, <span class="string">'FontSize'</span>, 14)
+ylabel(<span class="string">'Saving, s_j(a)'</span>, <span class="string">'FontSize'</span>, 14)
+xlim([p.amin p.amax])
+legend(sprintf(<span class="string">'Unemployed, r=%.4f'</span>, r), <span class="keyword">...</span>
+       sprintf(<span class="string">'Employed, r=%.4f'</span>, r), <span class="string">'Location'</span>, <span class="string">'best'</span>, <span class="string">'FontSize'</span>, 14)
+
+<span class="comment">% 6-3. Value function</span>
+figure;
+
+set(gca, <span class="string">'FontSize'</span>, 18)
+plot(a, V_r(:,1,nr), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(a, V_r(:,2,nr), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'b'</span>)
+hold <span class="string">off</span>
+grid
+xlabel(<span class="string">'Wealth, a'</span>, <span class="string">'FontSize'</span>, 14)
+ylabel(<span class="string">'Value function, V_j(a)'</span>, <span class="string">'FontSize'</span>, 14)
+xlim([p.amin p.amax])
+legend(sprintf(<span class="string">'Unemployed, r=%.4f'</span>, r), <span class="keyword">...</span>
+       sprintf(<span class="string">'Employed, r=%.4f'</span>, r), <span class="string">'Location'</span>, <span class="string">'best'</span>, <span class="string">'FontSize'</span>, 14)
+
+<span class="comment">% 6-4. Wealth distribution</span>
+figure;
+
+set(gca, <span class="string">'FontSize'</span>, 14)
+plot(a, g_r(:,1,nr), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(a, g_r(:,2,nr), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'b'</span>)
+hold <span class="string">off</span>
+grid
+xlabel(<span class="string">'Wealth, a'</span>, <span class="string">'FontSize'</span>, 14)
+ylabel(<span class="string">'Densities, g_j(a)'</span>, <span class="string">'FontSize'</span>, 14)
+yy = get(gca, <span class="string">'yLim'</span>);
+hold <span class="string">on</span>
+plot([p.amin, p.amin], yy, <span class="string">'--k'</span>, <span class="string">'LineWidth'</span>, 2)
+hold <span class="string">off</span>
+text(-0.15, yy(1)-0.02*(yy(2) - yy(1)), <span class="string">'$\underline{a}$'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="string">'FontSize'</span>, 15, <span class="string">'Interpreter'</span>, <span class="string">'latex'</span>)
+xlim([-0.2 1])
+legend(sprintf(<span class="string">'Unemployed, r=%.4f'</span>, r), <span class="keyword">...</span>
+       sprintf(<span class="string">'Employed, r=%.4f'</span>, r), <span class="string">'Location'</span>, <span class="string">'best'</span>, <span class="string">'FontSize'</span>, 14)
+</pre>
+<p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MATLAB Code: HJB_Huggett_GE
+% 
+% Author: Muhammad (Modified section code from Kiyea)
+% Date: Nov 7, 2024
+%
+% Description:
+% This MATLAB script solves the general equilibrium of the Huggett model,
+% finding the equilibrium interest rate that clears the bond market.
+%
+% Reference: Huggett_equilibrium_iterate.m by Benjamin Moll 
+%
+% Notes:
+% - CRRA utility function: U(c) = (c^(1-sigma))/(1-sigma)
+% - Elasticity of intertemporal substitution (sigma): 2
+% - Discount rate (rho): 0.05
+% - Income: z = [z_u, z_e] = [0.1, 0.2];
+% - Lambda: la = [la_u, la_e] = [1.2, 1.2];
+% - Discrete grid of asset levels (a): -0.15 to 5
+% - Borrowing constraint: a>=-0.15
+% - Delta = 1000; (Can be arbitrarily large in implicit method)
+%
+% Code Structure:
+% 1. DEFINE PARAMETERS
+% 2. INITIALIZE GRID POINTS
+% 3. PRE-ITERATION INITIALIZATION
+% 4. VALUE FUNCTION ITERATION
+% 5. KF EQUATION
+% 6. GRAPHS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clear all;
+close all;
+clc;
+
+%% 1. DEFINE PARAMETERS
+
+p = define_parameters_GE();
+
+%% 2. INITIALIZE GRID POINTS
+
+a = linspace(p.amin, p.amax, p.I)';
+da = (p.amax-p.amin)/(p.I-1);
+
+aa = [a, a]; % I*2 matrix
+
+        % %% 2-2. INITIALIZE GRID POINTS FOR INTEREST RATES
+        % 
+        % rgrid = linspace(p.rmin, p.rmax, p.Ir)';
+
+%% 3. PRE-ITERATION INITIALIZATION
+
+% 3-1. Construct the forward and backward differential operator 
+% Df such that Df*V=dVf and Db such that Db*V=dVb
+
+    Df = zeros(p.I, p.I);
+    for i = 1:p.I-1
+        Df(i,i) = -1/da; Df(i,i+1) = 1/da;
+    end
+    Df = sparse(Df);
+
+    Db = zeros(p.I, p.I);
+    for i = 2:p.I
+        Db(i,i-1) = -1/da; Db(i,i) = 1/da;
+    end
+    Db = sparse(Db);
+
+% 3-2. Construct A_switch matrix
+
+    A_switch = [speye(p.I).*(-p.lambda(1)), speye(p.I).*p.lambda(1);
+                speye(p.I).*p.lambda(2), speye(p.I).*(-p.lambda(2))];
+
+%A_switch = zeros(2*I, 2*I);
+%for i=1:I
+%    A_switch(i,i) = -lambda(1);
+%    A_switch(i,i+I) = lambda(1);
+%    A_switch(i+I,i) = lambda(2);
+%    A_switch(i+I,i+I) = -lambda(2);
+%end
+
+        %% 3-3. Guess an initial value of the interest rate
+
+            r0 = 0.03;
+            r_min = 0.01;
+            r_max = 0.04;
+
+        %% 3-4. Guess an initial value of the value function
+
+            zz = ones(p.I, 1).*p.zz; % I*2 matrix
+            
+            % The value function of "staying put"
+            r = r0;
+
+            v0 = p.u(zz + r.*aa)./p.rho; 
+            V = v0;
+
+%% 4. VALUE FUNCTION ITERATION
+
+        for nr=1:p.Nr
+        
+            r_r(nr) = r;
+            rmin_r(nr) = r_min;
+            rmax_r(nr) = r_max;
+                               
+            % Use the value function solution from the previous interest rate iteration 
+            % as the initial guess for the next iteration
+            if nr>1
+               v0 = V_r(:,:,nr-1);
+               V = v0;
+            end
+
+%% 4. VALUE FUNCTION ITERATION
+
+for n=1:p.maxit
+
+    % 4-1. Compute the derivative of the value function 
+    dVf = Df*V;
+    dVb = Db*V;
+
+    % 4-2. Boundary conditions
+    dVb(1,:) = p.mu(zz(1,:) + r.*aa(1,:)); % a>=a_min is enforced (borrowing constraint)
+    dVf(end,:) = p.mu(zz(end,:) + r.*aa(end,:)); % a<=a_max is enforced which helps stability of the algorithm
+
+    I_concave = dVb > dVf; % indicator whether value function is concave (problems arise if this is not the case)
+
+    % 4-3. Compute the optimal consumption
+    cf = p.inv_mu(dVf);
+    cb = p.inv_mu(dVb);
+    
+    % 4-4. Compute the optimal savings
+    sf = zz + r.*aa - cf;
+    sb = zz + r.*aa - cb;
+
+    % 4-5. Upwind scheme
+    If = sf>0;
+    Ib = sb<0;
+    I0 = 1-If-Ib;
+    dV0 = p.mu(zz + r.*aa); % If sf<=0<=sb, set s=0
+
+    dV_upwind = If.*dVf + Ib.*dVb + I0.*dV0;
+
+    c = p.inv_mu(dV_upwind);
+
+    % 4-6. Update value function: 
+    % Vj^(n+1) = [(rho + 1/Delta)*I - (Sj^n*Dj^n+A_switch)]^(-1)*[u(cj^n) + 1/Delta*Vj^n]
+    
+    V_stacked = V(:); % 2I*1 matrix
+    c_stacked = c(:); % 2I*1 matrix
+
+    % A = SD
+    SD_u = spdiags(If(:,1).*sf(:,1), 0, p.I, p.I)*Df + spdiags(Ib(:,1).*sb(:,1), 0, p.I, p.I)*Db; % I*I matrix
+    SD_e = spdiags(If(:,2).*sf(:,2), 0, p.I, p.I)*Df + spdiags(Ib(:,2).*sb(:,2), 0, p.I, p.I)*Db; % I*I matrix
+    SD = [SD_u, sparse(p.I, p.I);
+         sparse(p.I, p.I), SD_e]; % 2I*2I matrix
+   
+    % P = A + A_switch
+    P = SD + A_switch;
+
+    % B = [(rho + 1/Delta)*I - P]
+    B = (p.rho + 1/p.Delta)*speye(2*p.I) - P; 
+
+    % b = u(c) + 1/Delta*V
+    b = p.u(c_stacked) + (1/p.Delta)*V_stacked;
+
+    % V = B\b;
+    V_update = B\b; % 2I*1 matrix
+    V_change = V_update - V_stacked;
+    V = reshape(V_update, p.I, 2); % I*2 matrix
+
+    % 3-6. Convergence criterion
+    dist(n) = max(abs(V_change));
+    if dist(n)<p.tol
+       disp('Value function converged. Iteration = ')
+       disp(n)
+       break
+    end
+end
+
+toc;
+
+%% 5. KF EQUATION
+
+% 5-1. Solve for 0=gdot=P'*g
+
+PT = P';
+gdot_stacked = zeros(2*p.I,1);
+
+% need to fix one value, otherwise matrix is singular
+i_fix = 1;
+gdot_stacked(i_fix)=.1;
+
+row_fix = [zeros(1,i_fix-1),1,zeros(1,2*p.I-i_fix)];
+AT(i_fix,:) = row_fix;
+
+g_stacked = PT\gdot_stacked; 
+
+% 5-2. Normalization
+
+g_sum = g_stacked'*ones(2*p.I,1)*da;
+g_stacked = g_stacked./g_sum;
+
+% 5-3. Reshape
+
+gg = reshape(g_stacked, p.I, 2);
+
+        %% 5-4. COMPUTE VARIABLES FOR A GIVEN r_r(nr)
+        % Notes: Each matrix has dimensions p.I*2(u,e)*nr
+        
+            g_r(:,:,nr) = gg;
+            adot(:,:,nr) = zz + r.*aa - c;
+            V_r(:,:,nr) = V;
+            dV_r(:,:,nr) = dV_upwind;
+            c_r(:,:,nr) = c;
+            
+            S(nr) = gg(:,1)'*a*da + gg(:,2)'*a*da;
+
+        %% 5-5. UPDATE INTEREST RATE
+        if nr == 1
+            % Store the initial guess
+            r_old = r;
+            S_old = S(nr);
+            % Update the interest rate using bisection method for the first iteration
+            if S(nr) > 0
+            r_max = r;
+            r = 0.5 * (r_min + r_max);
+            elseif S(nr) < 0
+            r_min = r;
+            r = 0.5 * (r_min + r_max);
+            end
+        else
+            % Use Newton's method for subsequent iterations
+            dr = (S(nr) - S_old) / (r - r_old);
+            r_old = r;
+            S_old = S(nr);
+            r = r - S(nr) / dr;
+        end
+
+        % Check if the new interest rate is within bounds
+        if r < r_min || r > r_max
+            r = 0.5 * (r_min + r_max);
+        end
+
+        % Check for convergence
+        if abs(S(nr)) < p.tol_S
+            disp('Equilibrium Found, Interest rate =')
+            disp(r)
+            break
+        end
+
+end
+
+disp("Algorithm converged")
+%% 6. GRAPHS 
+
+% 6-1. Optimal consumption 
+figure;
+set(gca, 'FontSize', 18)
+plot(a, c_r(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+hold on
+plot(a, c_r(:,2,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+hold off
+grid
+xlabel('Wealth, a','FontSize', 14)
+ylabel('Consumption, c_j(a)','FontSize', 14)
+xlim([p.amin p.amax])
+legend(sprintf('Unemployed, r=%.4f', r), ...
+       sprintf('Employed, r=%.4f', r), 'Location', 'best', 'FontSize', 14)
+
+% 6-2. Optimal savings 
+figure;
+
+set(gca, 'FontSize', 18)
+plot(a, adot(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+hold on
+plot(a, adot(:,2,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+hold off
+grid
+xlabel('Wealth, a', 'FontSize', 14)
+ylabel('Saving, s_j(a)', 'FontSize', 14)
+xlim([p.amin p.amax])
+legend(sprintf('Unemployed, r=%.4f', r), ...
+       sprintf('Employed, r=%.4f', r), 'Location', 'best', 'FontSize', 14)
+
+% 6-3. Value function
+figure;
+
+set(gca, 'FontSize', 18)
+plot(a, V_r(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+hold on
+plot(a, V_r(:,2,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+hold off
+grid
+xlabel('Wealth, a', 'FontSize', 14)
+ylabel('Value function, V_j(a)', 'FontSize', 14)
+xlim([p.amin p.amax])
+legend(sprintf('Unemployed, r=%.4f', r), ...
+       sprintf('Employed, r=%.4f', r), 'Location', 'best', 'FontSize', 14)
+
+% 6-4. Wealth distribution
+figure;
+
+set(gca, 'FontSize', 14)
+plot(a, g_r(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+hold on
+plot(a, g_r(:,2,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+hold off
+grid
+xlabel('Wealth, a', 'FontSize', 14)
+ylabel('Densities, g_j(a)', 'FontSize', 14)
+yy = get(gca, 'yLim');
+hold on
+plot([p.amin, p.amin], yy, 'REPLACE_WITH_DASH_DASHk', 'LineWidth', 2)
+hold off
+text(-0.15, yy(1)-0.02*(yy(2) - yy(1)), '$\underline{a}$', 'HorizontalAlignment', 'center', 'FontSize', 15, 'Interpreter', 'latex')
+xlim([-0.2 1])
+legend(sprintf('Unemployed, r=%.4f', r), ...
+       sprintf('Employed, r=%.4f', r), 'Location', 'best', 'FontSize', 14)
+##### SOURCE END #####
+-->
+</body>
+</html>
