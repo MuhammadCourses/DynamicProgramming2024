@@ -1,0 +1,591 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>EQ_r_NewtonMethod</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-11-26">
+<meta name="DC.source" content="EQ_r_NewtonMethod.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1></h1>
+<!--introduction-->
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Add paths to the necessary functions</a>
+</li>
+<li>
+<a href="#2">1. DEFINE PARAMETERS</a>
+</li>
+<li>
+<a href="#3">2. INITIALIZE GRID POINTS</a>
+</li>
+<li>
+<a href="#4">3. PRE-ITERATION INITIALIZATION</a>
+</li>
+<li>
+<a href="#5">3-3. Guess an initial value of the value function</a>
+</li>
+<li>
+<a href="#6">Getting all variables at this interest rate</a>
+</li>
+<li>
+<a href="#7">6. GRAPHS</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Add paths to the necessary functions</h2>
+<pre class="codeinput">addpath(genpath(<span class="string">'/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS4/GE'</span>))
+addpath(genpath(<span class="string">'/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS4/Asset Supply'</span>))
+addpath(genpath(<span class="string">'/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS4/KF'</span>))
+addpath(genpath(<span class="string">'/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS4/HJB'</span>))
+</pre>
+<h2 id="2">1. DEFINE PARAMETERS</h2>
+<pre class="codeinput">p = define_parameters_assetsupply();
+</pre>
+<h2 id="3">2. INITIALIZE GRID POINTS</h2>
+<pre class="codeinput">a = linspace(p.amin, p.amax, p.I)';
+da = (p.amax-p.amin)/(p.I-1);
+
+aa = [a, a]; <span class="comment">% I*2 matrix</span>
+
+    <span class="comment">% %% 2-2. INITIALIZE GRID POINTS FOR INTEREST RATES</span>
+
+    <span class="comment">% rgrid = linspace(p.rmin, p.rmax, p.Ir)';</span>
+</pre>
+<h2 id="4">3. PRE-ITERATION INITIALIZATION</h2>
+<pre class="codeinput">
+<span class="comment">% 3-1. Construct the forward and backward differential operator</span>
+<span class="comment">% Df such that Df*V=dVf and Db such that Db*V=dVb</span>
+
+    Df = zeros(p.I, p.I);
+    <span class="keyword">for</span> i = 1:p.I-1
+    Df(i,i) = -1/da; Df(i,i+1) = 1/da;
+    <span class="keyword">end</span>
+    Df = sparse(Df);
+
+    Db = zeros(p.I, p.I);
+    <span class="keyword">for</span> i = 2:p.I
+    Db(i,i-1) = -1/da; Db(i,i) = 1/da;
+    <span class="keyword">end</span>
+    Db = sparse(Db);
+
+<span class="comment">% 3-2. Construct A_switch matrix</span>
+
+    A_switch = [speye(p.I).*(-p.lambda(1)), speye(p.I).*p.lambda(1);
+        speye(p.I).*p.lambda(2), speye(p.I).*(-p.lambda(2))];
+
+<span class="comment">%A_switch = zeros(2*I, 2*I);</span>
+<span class="comment">%for i=1:I</span>
+<span class="comment">%    A_switch(i,i) = -lambda(1);</span>
+<span class="comment">%    A_switch(i,i+I) = lambda(1);</span>
+<span class="comment">%    A_switch(i+I,i) = lambda(2);</span>
+<span class="comment">%    A_switch(i+I,i+I) = -lambda(2);</span>
+<span class="comment">%end</span>
+</pre>
+<h2 id="5">3-3. Guess an initial value of the value function</h2>
+<pre class="codeinput">        zz = ones(p.I, 1).*p.zz; <span class="comment">% I*2 matrix</span>
+        <span class="comment">% Define the function to find the zero</span>
+        f = @(r) Huggett_assetsupply(r, p, aa, zz, Df, Db, A_switch, da);
+
+        <span class="comment">% Initial guess for r</span>
+        r_guess = 0.03;
+
+        <span class="comment">% Tolerance and maximum iterations</span>
+        tol = 1e-6;
+        max_iter = 100;
+
+        <span class="comment">% Newton's method</span>
+        <span class="keyword">for</span> iter = 1:max_iter
+        <span class="comment">% Evaluate function and its derivative</span>
+        f_val = f(r_guess);
+        f_prime = (f(r_guess + tol) - f_val) / tol;
+
+        <span class="comment">% Update r using Newton's method</span>
+        r_new = r_guess - f_val / f_prime;
+
+        <span class="comment">% Check for convergence</span>
+        <span class="keyword">if</span> abs(r_new - r_guess) &lt; tol
+            fprintf(<span class="string">'Converged to r = %.6f in %d iterations\n'</span>, r_new, iter);
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+
+        <span class="comment">% Update guess</span>
+        r_guess = r_new;
+        <span class="keyword">end</span>
+
+        <span class="keyword">if</span> iter == max_iter
+        warning(<span class="string">'Newton method did not converge within the maximum number of iterations'</span>);
+        <span class="keyword">end</span>
+
+        <span class="comment">% Final value of r</span>
+        r = r_new;
+</pre>
+<h2 id="6">Getting all variables at this interest rate</h2>
+<p>Initial guess for the value function</p>
+<pre class="codeinput">    v0 = p.u(zz + max(r, 0.01) .* aa) ./ p.rho;
+    V = v0;
+
+    <span class="comment">% 1. VALUE FUNCTION ITERATION</span>
+    <span class="keyword">for</span> n = 1:p.maxit
+
+    <span class="comment">% 1-1. Compute derivatives of the value function</span>
+    dVf = Df * V;
+    dVb = Db * V;
+
+    <span class="comment">% 1-2. Boundary conditions</span>
+    dVb(1, :) = p.mu(zz(1, :) + r .* aa(1, :));      <span class="comment">% Enforce borrowing constraint a &gt;= a_min</span>
+    dVf(end, :) = p.mu(zz(end, :) + r .* aa(end, :)); <span class="comment">% Enforce upper bound a &lt;= a_max</span>
+
+    <span class="comment">% 1-3. Compute optimal consumption</span>
+    cf = p.inv_mu(dVf);
+    cb = p.inv_mu(dVb);
+
+    <span class="comment">% 1-4. Compute optimal savings</span>
+    sf = zz + r .* aa - cf;
+    sb = zz + r .* aa - cb;
+
+    <span class="comment">% 1-5. Upwind scheme</span>
+    If = sf &gt; 0;
+    Ib = sb &lt; 0;
+    I0 = 1 - If - Ib;
+    dV_Upwind = If .* dVf + Ib .* dVb + I0 .* p.mu(zz + r .* aa);
+    c = p.inv_mu(dV_Upwind);
+    s = zz + r .* aa - c;
+
+    <span class="comment">% 1-6. Construct the matrix for the linear system</span>
+    c_stacked = c(:);
+    V_stacked = V(:);
+
+    <span class="comment">% Drift terms</span>
+    A1 = spdiags(If(:, 1) .* sf(:, 1), 0, p.I, p.I) * Df + spdiags(Ib(:, 1) .* sb(:, 1), 0, p.I, p.I) * Db;
+    A2 = spdiags(If(:, 2) .* sf(:, 2), 0, p.I, p.I) * Df + spdiags(Ib(:, 2) .* sb(:, 2), 0, p.I, p.I) * Db;
+    A = [A1, sparse(p.I, p.I); sparse(p.I, p.I), A2];
+
+    <span class="comment">% Total generator</span>
+    P = A + A_switch;
+
+    <span class="comment">% Right-hand side and left-hand side for the linear system</span>
+    B = (p.rho + 1 / p.Delta) * speye(2 * p.I) - P;
+    b = p.u(c_stacked) + V_stacked / p.Delta;
+
+    <span class="comment">% Solve for the updated value function</span>
+    V_new = B \ b;
+    V_change = max(abs(V_new - V_stacked));
+
+    <span class="comment">% Update value function</span>
+    V = reshape(V_new, p.I, 2);
+
+    <span class="comment">% Check for convergence</span>
+    <span class="keyword">if</span> V_change &lt; p.tol
+        <span class="keyword">break</span>;
+    <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment">% 2. KF EQUATION</span>
+
+    <span class="comment">% Transpose of generator matrix</span>
+    P_transpose = P';
+
+    <span class="comment">% Solve P'*g = 0 with normalization condition</span>
+    g_stacked = zeros(2 * p.I, 1);
+    i_fix = 1;
+    P_transpose(i_fix, :) = zeros(1, 2 * p.I);
+    P_transpose(i_fix, i_fix) = 1;
+    g_stacked(i_fix) = 1;
+
+    <span class="comment">% Solve for the stationary distribution</span>
+    g = P_transpose \ g_stacked;
+
+    <span class="comment">% Normalize the distribution</span>
+    g = g / sum(g * da);
+
+    <span class="comment">% Reshape to original dimensions</span>
+    g = reshape(g, p.I, 2);
+
+    <span class="comment">% Compute asset supply S(r)</span>
+    S = sum(g(:, 1) .* aa(:, 1) * da) + sum(g(:, 2) .* aa(:, 2) * da);
+</pre>
+<pre class="codeoutput">Converged to r = 0.033935 in 4 iterations
+</pre>
+<h2 id="7">6. GRAPHS</h2>
+<p>6-1. Optimal consumption</p>
+<pre class="codeinput">figure
+set(gca, <span class="string">'FontSize'</span>, 18)
+plot(a, c(:,1), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(a, c(:,2), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'b'</span>)
+hold <span class="string">off</span>
+grid
+xlabel(<span class="string">'Wealth, a'</span>,<span class="string">'FontSize'</span>, 14)
+ylabel(<span class="string">'Consumption, c_j(a)'</span>,<span class="string">'FontSize'</span>, 14)
+xlim([p.amin p.amax])
+legend(<span class="string">'Unemployed'</span>, <span class="string">'Employed'</span>, <span class="string">'Location'</span>, <span class="string">'best'</span>, <span class="string">'FontSize'</span>, 14)
+title(sprintf(<span class="string">'Optimal Consumption at Equilibrium Interest Rate r = %.6f'</span>, r))
+
+<span class="comment">% 6-2. Optimal savings</span>
+figure
+set(gca, <span class="string">'FontSize'</span>, 18)
+plot(a, s(:,1), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(a, s(:,2), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'b'</span>)
+hold <span class="string">off</span>
+grid
+xlabel(<span class="string">'Wealth, a'</span>, <span class="string">'FontSize'</span>, 14)
+ylabel(<span class="string">'Saving, s_j(a)'</span>, <span class="string">'FontSize'</span>, 14)
+xlim([p.amin p.amax])
+legend(<span class="string">'Unemployed'</span>, <span class="string">'Employed'</span>, <span class="string">'Location'</span>, <span class="string">'best'</span>, <span class="string">'FontSize'</span>, 14)
+title(sprintf(<span class="string">'Optimal Savings at Equilibrium Interest Rate r = %.6f'</span>, r))
+
+<span class="comment">% 6-3. Value function</span>
+figure
+set(gca, <span class="string">'FontSize'</span>, 18)
+plot(a, V(:,1), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(a, V(:,2), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'b'</span>)
+hold <span class="string">off</span>
+grid
+xlabel(<span class="string">'Wealth, a'</span>, <span class="string">'FontSize'</span>, 14)
+ylabel(<span class="string">'Value function, V_j(a)'</span>, <span class="string">'FontSize'</span>, 14)
+xlim([p.amin p.amax])
+legend(<span class="string">'Unemployed'</span>, <span class="string">'Employed'</span>, <span class="string">'Location'</span>, <span class="string">'best'</span>, <span class="string">'FontSize'</span>, 14)
+title(sprintf(<span class="string">'Value Function at Equilibrium Interest Rate r = %.6f'</span>, r))
+
+<span class="comment">% 6-4. Wealth distribution</span>
+figure
+set(gca, <span class="string">'FontSize'</span>, 14)
+plot(a, g(:,1), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'r'</span>)
+hold <span class="string">on</span>
+plot(a, g(:,2), <span class="string">'LineWidth'</span>, 2, <span class="string">'LineStyle'</span>, <span class="string">'-'</span>, <span class="string">'Color'</span>, <span class="string">'b'</span>)
+hold <span class="string">off</span>
+grid
+xlabel(<span class="string">'Wealth, a'</span>, <span class="string">'FontSize'</span>, 14)
+ylabel(<span class="string">'Densities, g_j(a)'</span>, <span class="string">'FontSize'</span>, 14)
+yy = get(gca, <span class="string">'yLim'</span>);
+hold <span class="string">on</span>
+plot([p.amin, p.amin], yy, <span class="string">'--k'</span>, <span class="string">'LineWidth'</span>, 2)
+hold <span class="string">off</span>
+text(-0.15, yy(1)-0.02*(yy(2) - yy(1)), <span class="string">'$\underline{a}$'</span>, <span class="string">'HorizontalAlignment'</span>, <span class="string">'center'</span>, <span class="string">'FontSize'</span>, 15, <span class="string">'Interpreter'</span>, <span class="string">'latex'</span>)
+xlim([-0.2 1])
+legend(<span class="string">'Unemployed'</span>, <span class="string">'Employed'</span>, <span class="string">'Location'</span>, <span class="string">'best'</span>, <span class="string">'FontSize'</span>, 14)
+title(sprintf(<span class="string">'Wealth Distribution at Equilibrium Interest Rate r = %.6f'</span>, r))
+</pre>
+<img vspace="5" hspace="5" src="EQ_r_NewtonMethod_01.png" alt=""> <img vspace="5" hspace="5" src="EQ_r_NewtonMethod_02.png" alt=""> <img vspace="5" hspace="5" src="EQ_r_NewtonMethod_03.png" alt=""> <img vspace="5" hspace="5" src="EQ_r_NewtonMethod_04.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+
+
+%% Add paths to the necessary functions
+addpath(genpath('/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS4/GE'))
+addpath(genpath('/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS4/Asset Supply'))
+addpath(genpath('/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS4/KF'))
+addpath(genpath('/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS4/HJB'))
+
+%% 1. DEFINE PARAMETERS
+
+p = define_parameters_assetsupply();
+
+%% 2. INITIALIZE GRID POINTS
+
+a = linspace(p.amin, p.amax, p.I)';
+da = (p.amax-p.amin)/(p.I-1);
+
+aa = [a, a]; % I*2 matrix
+
+    % %% 2-2. INITIALIZE GRID POINTS FOR INTEREST RATES
+    
+    % rgrid = linspace(p.rmin, p.rmax, p.Ir)';
+
+%% 3. PRE-ITERATION INITIALIZATION
+
+% 3-1. Construct the forward and backward differential operator 
+% Df such that Df*V=dVf and Db such that Db*V=dVb
+
+    Df = zeros(p.I, p.I);
+    for i = 1:p.I-1
+    Df(i,i) = -1/da; Df(i,i+1) = 1/da;
+    end
+    Df = sparse(Df);
+
+    Db = zeros(p.I, p.I);
+    for i = 2:p.I
+    Db(i,i-1) = -1/da; Db(i,i) = 1/da;
+    end
+    Db = sparse(Db);
+
+% 3-2. Construct A_switch matrix
+
+    A_switch = [speye(p.I).*(-p.lambda(1)), speye(p.I).*p.lambda(1);
+        speye(p.I).*p.lambda(2), speye(p.I).*(-p.lambda(2))];
+
+%A_switch = zeros(2*I, 2*I);
+%for i=1:I
+%    A_switch(i,i) = -lambda(1);
+%    A_switch(i,i+I) = lambda(1);
+%    A_switch(i+I,i) = lambda(2);
+%    A_switch(i+I,i+I) = -lambda(2);
+%end
+
+    %% 3-3. Guess an initial value of the value function
+    
+        zz = ones(p.I, 1).*p.zz; % I*2 matrix
+        % Define the function to find the zero
+        f = @(r) Huggett_assetsupply(r, p, aa, zz, Df, Db, A_switch, da);
+
+        % Initial guess for r
+        r_guess = 0.03;
+
+        % Tolerance and maximum iterations
+        tol = 1e-6;
+        max_iter = 100;
+
+        % Newton's method
+        for iter = 1:max_iter
+        % Evaluate function and its derivative
+        f_val = f(r_guess);
+        f_prime = (f(r_guess + tol) - f_val) / tol;
+        
+        % Update r using Newton's method
+        r_new = r_guess - f_val / f_prime;
+        
+        % Check for convergence
+        if abs(r_new - r_guess) < tol
+            fprintf('Converged to r = %.6f in %d iterations\n', r_new, iter);
+            break;
+        end
+        
+        % Update guess
+        r_guess = r_new;
+        end
+
+        if iter == max_iter
+        warning('Newton method did not converge within the maximum number of iterations');
+        end
+
+        % Final value of r
+        r = r_new;
+%%% Getting all variables at this interest rate 
+    % Initial guess for the value function
+    v0 = p.u(zz + max(r, 0.01) .* aa) ./ p.rho; 
+    V = v0;
+
+    % 1. VALUE FUNCTION ITERATION
+    for n = 1:p.maxit
+
+    % 1-1. Compute derivatives of the value function
+    dVf = Df * V;
+    dVb = Db * V;
+
+    % 1-2. Boundary conditions
+    dVb(1, :) = p.mu(zz(1, :) + r .* aa(1, :));      % Enforce borrowing constraint a >= a_min
+    dVf(end, :) = p.mu(zz(end, :) + r .* aa(end, :)); % Enforce upper bound a <= a_max
+
+    % 1-3. Compute optimal consumption
+    cf = p.inv_mu(dVf);
+    cb = p.inv_mu(dVb);
+
+    % 1-4. Compute optimal savings
+    sf = zz + r .* aa - cf;
+    sb = zz + r .* aa - cb;
+
+    % 1-5. Upwind scheme
+    If = sf > 0;
+    Ib = sb < 0;
+    I0 = 1 - If - Ib;
+    dV_Upwind = If .* dVf + Ib .* dVb + I0 .* p.mu(zz + r .* aa);
+    c = p.inv_mu(dV_Upwind);
+    s = zz + r .* aa - c;
+
+    % 1-6. Construct the matrix for the linear system
+    c_stacked = c(:);
+    V_stacked = V(:);
+
+    % Drift terms
+    A1 = spdiags(If(:, 1) .* sf(:, 1), 0, p.I, p.I) * Df + spdiags(Ib(:, 1) .* sb(:, 1), 0, p.I, p.I) * Db;
+    A2 = spdiags(If(:, 2) .* sf(:, 2), 0, p.I, p.I) * Df + spdiags(Ib(:, 2) .* sb(:, 2), 0, p.I, p.I) * Db;
+    A = [A1, sparse(p.I, p.I); sparse(p.I, p.I), A2];
+
+    % Total generator
+    P = A + A_switch;
+
+    % Right-hand side and left-hand side for the linear system
+    B = (p.rho + 1 / p.Delta) * speye(2 * p.I) - P;
+    b = p.u(c_stacked) + V_stacked / p.Delta;
+
+    % Solve for the updated value function
+    V_new = B \ b;
+    V_change = max(abs(V_new - V_stacked));
+
+    % Update value function
+    V = reshape(V_new, p.I, 2);
+
+    % Check for convergence
+    if V_change < p.tol
+        break;
+    end
+    end
+
+    % 2. KF EQUATION
+
+    % Transpose of generator matrix
+    P_transpose = P';
+
+    % Solve P'*g = 0 with normalization condition
+    g_stacked = zeros(2 * p.I, 1);
+    i_fix = 1;
+    P_transpose(i_fix, :) = zeros(1, 2 * p.I);
+    P_transpose(i_fix, i_fix) = 1;
+    g_stacked(i_fix) = 1;
+
+    % Solve for the stationary distribution
+    g = P_transpose \ g_stacked;
+
+    % Normalize the distribution
+    g = g / sum(g * da);
+
+    % Reshape to original dimensions
+    g = reshape(g, p.I, 2);
+
+    % Compute asset supply S(r)
+    S = sum(g(:, 1) .* aa(:, 1) * da) + sum(g(:, 2) .* aa(:, 2) * da);
+%% 6. GRAPHS 
+% 6-1. Optimal consumption 
+figure 
+set(gca, 'FontSize', 18)
+plot(a, c(:,1), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+hold on
+plot(a, c(:,2), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+hold off
+grid
+xlabel('Wealth, a','FontSize', 14)
+ylabel('Consumption, c_j(a)','FontSize', 14)
+xlim([p.amin p.amax])
+legend('Unemployed', 'Employed', 'Location', 'best', 'FontSize', 14)
+title(sprintf('Optimal Consumption at Equilibrium Interest Rate r = %.6f', r))
+
+% 6-2. Optimal savings 
+figure 
+set(gca, 'FontSize', 18)
+plot(a, s(:,1), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+hold on
+plot(a, s(:,2), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+hold off
+grid
+xlabel('Wealth, a', 'FontSize', 14)
+ylabel('Saving, s_j(a)', 'FontSize', 14)
+xlim([p.amin p.amax])
+legend('Unemployed', 'Employed', 'Location', 'best', 'FontSize', 14)
+title(sprintf('Optimal Savings at Equilibrium Interest Rate r = %.6f', r))
+
+% 6-3. Value function
+figure 
+set(gca, 'FontSize', 18)
+plot(a, V(:,1), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+hold on
+plot(a, V(:,2), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+hold off
+grid
+xlabel('Wealth, a', 'FontSize', 14)
+ylabel('Value function, V_j(a)', 'FontSize', 14)
+xlim([p.amin p.amax])
+legend('Unemployed', 'Employed', 'Location', 'best', 'FontSize', 14)
+title(sprintf('Value Function at Equilibrium Interest Rate r = %.6f', r))
+
+% 6-4. Wealth distribution
+figure 
+set(gca, 'FontSize', 14)
+plot(a, g(:,1), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+hold on
+plot(a, g(:,2), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+hold off
+grid
+xlabel('Wealth, a', 'FontSize', 14)
+ylabel('Densities, g_j(a)', 'FontSize', 14)
+yy = get(gca, 'yLim');
+hold on
+plot([p.amin, p.amin], yy, 'REPLACE_WITH_DASH_DASHk', 'LineWidth', 2)
+hold off
+text(-0.15, yy(1)-0.02*(yy(2) - yy(1)), '$\underline{a}$', 'HorizontalAlignment', 'center', 'FontSize', 15, 'Interpreter', 'latex')
+xlim([-0.2 1])
+legend('Unemployed', 'Employed', 'Location', 'best', 'FontSize', 14)
+title(sprintf('Wealth Distribution at Equilibrium Interest Rate r = %.6f', r))
+##### SOURCE END #####
+-->
+</body>
+</html>

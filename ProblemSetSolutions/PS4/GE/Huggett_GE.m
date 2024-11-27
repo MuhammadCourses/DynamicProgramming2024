@@ -1,14 +1,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MATLAB Code: HJB_Huggett_GE
 % 
-% Author: Kiyea Jin
+% Author: Muhammad (Modified section code from Kiyea)
 % Date: Nov 7, 2024
 %
 % Description:
 % This MATLAB script solves the general equilibrium of the Huggett model,
 % finding the equilibrium interest rate that clears the bond market.
 %
-% Reference: Huggett_equilibrium_iterate.m by Benjamin Moll
+% Reference: Huggett_equilibrium_iterate.m by Benjamin Moll 
 %
 % Notes:
 % - CRRA utility function: U(c) = (c^(1-sigma))/(1-sigma)
@@ -238,7 +238,7 @@ disp("Algorithm converged")
 %% 6. GRAPHS 
 
 % 6-1. Optimal consumption 
-
+figure;
 set(gca, 'FontSize', 18)
 plot(a, c_r(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
 hold on
@@ -252,6 +252,7 @@ legend(sprintf('Unemployed, r=%.4f', r), ...
        sprintf('Employed, r=%.4f', r), 'Location', 'best', 'FontSize', 14)
 
 % 6-2. Optimal savings 
+figure;
 
 set(gca, 'FontSize', 18)
 plot(a, adot(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
@@ -266,6 +267,7 @@ legend(sprintf('Unemployed, r=%.4f', r), ...
        sprintf('Employed, r=%.4f', r), 'Location', 'best', 'FontSize', 14)
 
 % 6-3. Value function
+figure;
 
 set(gca, 'FontSize', 18)
 plot(a, V_r(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
@@ -280,6 +282,7 @@ legend(sprintf('Unemployed, r=%.4f', r), ...
        sprintf('Employed, r=%.4f', r), 'Location', 'best', 'FontSize', 14)
 
 % 6-4. Wealth distribution
+figure;
 
 set(gca, 'FontSize', 14)
 plot(a, g_r(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
