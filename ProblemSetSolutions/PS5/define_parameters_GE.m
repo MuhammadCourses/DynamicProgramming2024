@@ -5,31 +5,23 @@ function p = define_parameters_GE()
 %% Economic Parameters
     
     % Relative risk aversion
-    p.gamma = 2;                            % although pset calls it sigma, I will stick with this so that it is easier to use previous code. 
+    p.gamma = 2;
 
     % Discount rate
     p.rho = 0.05;
     
-    % depreciation rate
-    p.delta = 0.05;
-
-    % share of capital in production
-    p.alpha = 1/3;
-
-    % Total factor productivity
-    p.A = 0.1;
     %% WE NO LONGER ASSUME EXOGENOUS INTEREST RATE
     % Exogenous interest rate
     % p.r = 0.035;
     
-    % idiosyncratic productivity process
-    p.z_u = 1;
-    p.z_e = 2;
+    % Income process
+    p.z_u = 0.1;
+    p.z_e = 0.2;
     p.zz = [p.z_u, p.z_e];
 
-    % Transition rates for idiosyncratic productivity process ( same for both states)
-    p.lambda_u = 1/3;
-    p.lambda_e = 1/3;
+    % Probability density   
+    p.lambda_u = 1.2;
+    p.lambda_e = 1.2;
     p.lambda = [p.lambda_u, p.lambda_e];
     
 %% Economic Functions
@@ -43,19 +35,10 @@ function p = define_parameters_GE()
     % FOC: mu(c)=dV -> c=inv_mu(dV)
     p.inv_mu = @(dV) dV.^(-1/p.gamma);
 
-    % Production function
-    p.f = @(k) p.A*k.^p.alpha;
-
-    % marginal product of capital
-    p.fk = @(k) p.alpha*p.A*k.^(p.alpha-1);
-
-    % marginal product of labor 
-    p.fl = @(k) (1-p.alpha)*p.A*k.^p.alpha;
-
 %% Grid Parmaters
 
-    p.kmin = 0;
-    p.kmax = 20;
+    p.amin = -0.15;
+    p.amax = 5;
 
     % The number of grid points
     p.I = 1000;
