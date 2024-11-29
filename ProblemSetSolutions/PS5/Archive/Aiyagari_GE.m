@@ -116,9 +116,9 @@ for n=1:p.maxit
     dVf = Df*V;
     dVb = Db*V;
 
-    % 4-2. Boundkry conditions
-    dVb(1,:) = p.mu(zz(1,:) + r.*kk(1,:)); % a>=a_min is enforced (borrowing constraint)
-    dVf(end,:) = p.mu(zz(end,:) + r.*kk(end,:)); % a<=a_max is enforced which helps stability of the algorithm
+    % 4-2. Boundry conditions
+    dVb(1,:) = p.mu(zz(1,:) + r.*kk(1,:)); % k>=0 is enforced (borrowing constraint)
+    dVf(end,:) = p.mu(zz(end,:) + r.*kk(end,:)); % k<=k_max is enforced which helps stability of the algorithm
 
     I_concave = dVb > dVf; % indicator whether value function is concave (problems arise if this is not the case)
 
@@ -126,15 +126,15 @@ for n=1:p.maxit
     cf = p.inv_mu(dVf);
     cb = p.inv_mu(dVb);
     
-    % 4-4. Compute the optimal savings
-    sf = zz + r.*kk - cf;
-    sb = zz + r.*kk - cb;
+    % 4-4. Compute the optimal capital accumulation
+    ka_f = w.*zz + r.*kk - cf;
+    ka_b = w.*zz + r.*kk - cb;
 
     % 4-5. Upwind scheme
-    If = sf>0;
-    Ib = sb<0;
+    If = ka_f>0;
+    Ib = ka_b<0;
     I0 = 1-If-Ib;
-    dV0 = p.mu(zz + r.*kk); % If sf<=0<=sb, set s=0
+    dV0 = p.mu(zz + r.*kk); % If ka_f<=0<=ka_b, set s=0
 
     dV_upwind = If.*dVf + Ib.*dVb + I0.*dV0;
 
@@ -147,8 +147,8 @@ for n=1:p.maxit
     c_stacked = c(:); % 2I*1 matrix
 
     % A = SD
-    SD_u = spdiags(If(:,1).*sf(:,1), 0, p.I, p.I)*Df + spdiags(Ib(:,1).*sb(:,1), 0, p.I, p.I)*Db; % I*I matrix
-    SD_e = spdiags(If(:,2).*sf(:,2), 0, p.I, p.I)*Df + spdiags(Ib(:,2).*sb(:,2), 0, p.I, p.I)*Db; % I*I matrix
+    SD_u = spdiags(If(:,1).*ka_f(:,1), 0, p.I, p.I)*Df + spdiags(Ib(:,1).*ka_b(:,1), 0, p.I, p.I)*Db; % I*I matrix
+    SD_e = spdiags(If(:,2).*ka_f(:,2), 0, p.I, p.I)*Df + spdiags(Ib(:,2).*ka_b(:,2), 0, p.I, p.I)*Db; % I*I matrix
     SD = [SD_u, sparse(p.I, p.I);
          sparse(p.I, p.I), SD_e]; % 2I*2I matrix
    
@@ -206,14 +206,17 @@ gg = reshape(g_stacked, p.I, 2);
         % Notes: Each matrix has dimensions p.I*2(u,e)*nr
         
             g_r(:,:,nr) = gg;
-            adot(:,:,nr) = zz + r.*kk - c;
+            kdot(:,:,nr) = w.*zz + r.*kk - c;
             V_r(:,:,nr) = V;
             dV_r(:,:,nr) = dV_upwind;
             c_r(:,:,nr) = c;
             
-            S(nr) = gg(:,1)'*a*dk + gg(:,2)'*a*dk;
+            KH(nr) = gg(:,1)'*k*dk + gg(:,2)'*k*dk;      % Aggregate capital Household capital supply 
+            LH(nr) = gg(:,1)'*zz(1)*dk + gg(:,2)'*zz(2)*dk; % Aggregate labor   Household labor supply
+            C      = gg(:,1)'*c(:,1)*dk + gg(:,2)'*c(:,2)*dk; % Aggregate consumption Household consumption
+            Y      = p.f(KH(nr)); % Aggregate output
 
-        %% 5-5. UPdkTE INTEREST RATE
+        %% 5-5. Update INTEREST RATE
 
         if S(nr)>p.tol_S
             disp('Excess Supply')
@@ -254,9 +257,9 @@ legend(sprintf('Unemployed, r=%.4f', r), ...
 figure;
 
 set(gca, 'FontSize', 18)
-plot(a, adot(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
+plot(a, kdot(:,1,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'r')
 hold on
-plot(a, adot(:,2,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
+plot(a, kdot(:,2,nr), 'LineWidth', 2, 'LineStyle', '-', 'Color', 'b')
 hold off
 grid
 xlabel('Wealth, a', 'FontSize', 14)

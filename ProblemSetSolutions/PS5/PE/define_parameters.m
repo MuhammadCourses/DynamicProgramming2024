@@ -1,4 +1,4 @@
-function p = define_parameters_GE()
+function p = define_parameters()
 
 % This function defines the parameters needed for the Huggett_GE.m script
 
@@ -10,18 +10,21 @@ function p = define_parameters_GE()
     % Discount rate
     p.rho = 0.05;
     
-    %% WE NO LONGER ASSUME EXOGENOUS INTEREST RATE
     % Exogenous interest rate
-    % p.r = 0.035;
-    
+    p.r = 0.035;    
+    % capital share
+    p.alpha = 1/3;
+
+    % exogenous productivity
+    p.A = 0.1;
     % Income process
-    p.z_u = 0.1;
-    p.z_e = 0.2;
+    p.z_u = 1;
+    p.z_e = 2;
     p.zz = [p.z_u, p.z_e];
 
     % Probability density   
-    p.lambda_u = 1.2;
-    p.lambda_e = 1.2;
+    p.lambda_u = 1/3;
+    p.lambda_e = 1/3;
     p.lambda = [p.lambda_u, p.lambda_e];
     
 %% Economic Functions
@@ -35,19 +38,21 @@ function p = define_parameters_GE()
     % FOC: mu(c)=dV -> c=inv_mu(dV)
     p.inv_mu = @(dV) dV.^(-1/p.gamma);
 
+    % Production function
+    p.f = @(x) p.A*x(1)^p.alpha*x(2)^(1-p.alpha);
+    p.fk = @(x) p.alpha*p.A*x(1)^(p.alpha-1)*x(2)^(1-p.alpha);
+    p.fl = @(x) (1-p.alpha)*p.A*x(1)^p.alpha*x(2)^(-p.alpha);
+
 %% Grid Parmaters
 
-    p.amin = -0.15;
-    p.amax = 5;
+    p.kmin = 0;
+    p.kmax = 20;
 
-    % The number of grid points
-    p.I = 1000;
+    % % The number of grid points
+    % p.I = 1000;
 
-    % % WE NO LONGER CONSTRUCT GRID POINTS FOR INTEREST RATES
-    % % Grid parameters for interest rate
-    % p.rmin = -0.05;
-    % p.rmax = 0.04;
-    % p.Ir = 20;
+    % The level of sparse grid
+    p.l = 10;
 
 %% Tuning parameters
 
