@@ -221,15 +221,24 @@ subplot(3,1,1)
 plot(T, r_t, 'LineWidth', 2)
 title('Interest Rate Transition')
 ylabel('r(t)')
+ytickformat('%.2f')
+grid on
 
 subplot(3,1,2)
 plot(T, w_t, 'LineWidth', 2)
 title('Wage Transition')
 ylabel('w(t)')
+ytickformat('%.2f')
+grid on
 
 subplot(3,1,3)
 plot(T, K_t, 'LineWidth', 2)
 title('Capital Transition')
 ylabel('K(t)')
 xlabel('Time')
+ytickformat('%.2f')
+grid on
+
+% save figure
+saveas(gcf, fullfile('..', 'Output','GE_transition_dynamics.png'));
 
