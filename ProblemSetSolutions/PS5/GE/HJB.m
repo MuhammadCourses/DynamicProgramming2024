@@ -5,18 +5,18 @@ num0 = 1e-8; % numerical 0 for upwind scheme
 
 % 3-1. Construct the forward and backward differential operator 
 % Df such that Df*V=dVf and Db such that Db*V=dVb
-    % 
-    % Df = zeros(p.I, p.I);
-    % for i = 1:p.I-1
-    %     Df(i,i) = -1/da; Df(i,i+1) = 1/da;
-    % end
-    % Df = sparse(Df);
-    % 
-    % Db = zeros(p.I, p.I);
-    % for i = 2:p.I
-    %     Db(i,i-1) = -1/da; Db(i,i) = 1/da;
-    % end
-    % Db = sparse(Db);
+    p.I = G.J;
+    Df = zeros(p.I, p.I);
+    for i = 1:p.I-1
+        Df(i,i) = -1/G.dk; Df(i,i+1) = 1/G.dk;
+    end
+    Df = sparse(Df);
+    
+    Db = zeros(p.I, p.I);
+    for i = 2:p.I
+        Db(i,i-1) = -1/G.dk; Db(i,i) = 1/G.dk;
+    end
+    Db = sparse(Db);
 
     %% DIFFERENTIAL OPERATOR + BOUNDARY CONDITIONS
 
@@ -58,31 +58,34 @@ num0 = 1e-8; % numerical 0 for upwind scheme
     % The value function of "staying put"
     
     v0 = p.u(G.income)./p.rho; 
+        % replace 0 or negative values of V with 1 
+    % v0(v0<=0) = 10;
     V = v0;
+
 
 %% 4. VALUE FUNCTION ITERATION
 
 for n=1:p.maxit
 
     %% 4-1. Compute the derivative of the value function 
-    % dVf = Df*V;
-    % dVb = Db*V;
+    dVf = Df*V;
+    dVb = Db*V;
 
     % function deriv = deriv_sparse(G, f, k, operator, name)
 
-    dVf =zeros(G.J, 2);
-    dVb =zeros(G.J, 2);
-    for j = 1:2
-        dVf(:, j) = deriv_sparse(G, V(:,j), 1, 'D1F', num2str(j));
-        dVb(:, j) = deriv_sparse(G, V(:,j), 1, 'D1B', num2str(j));
-    end
+    % dVf =zeros(G.J, 2);
+    % dVb =zeros(G.J, 2);
+    % for j = 1:2
+    %     dVf(:, j) = deriv_sparse(G, V(:,j), 1, 'D1F', num2str(j));
+    %     dVb(:, j) = deriv_sparse(G, V(:,j), 1, 'D1B', num2str(j));
+    % end
  
     %% 4-2. Boundary conditions
-    % dVb(1,:) = p.mu(zz(1,:) + r.*aa(1,:)); % a>=a_min is enforced (borrowing constraint)
-    % dVf(end,:) = p.mu(zz(end,:) + r.*aa(end,:)); % a<=a_max is enforced which helps stability of the algorithm
+    dVb(1,:) = p.mu(G.income(1,:) + r.*G.k(1,:)); % k>=k_min is enforced (borrowing constraint)
+    dVf(end,:) = p.mu(G.income(end,:) + r.*G.k(end,:)); % k<=k_max is enforced which helps stability of the algorithm
     
-    % dVf(G.k == p.kmax, :) = p.mu(G.income(G.k == p.kmax, :));
-    % dVb(G.k == p.kmin, :) = p.mu(G.income(G.k == p.kmin, :));
+    dVf(G.k == p.kmax, :) = p.mu(G.income(G.k == p.kmax, :));
+    dVb(G.k == p.kmin, :) = p.mu(G.income(G.k == p.kmin, :));
 
     I_concave = dVb > dVf; % indicator whether value function is concave (problems arise if this is not the case)
 
@@ -149,5 +152,6 @@ for n=1:p.maxit
        break
     end
 end
+if ~isreal(V), fprintf('Complex values in VFI: terminating process.'); V = NaN(1); return; end
 
 end

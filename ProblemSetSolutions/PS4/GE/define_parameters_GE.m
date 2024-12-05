@@ -1,88 +1,80 @@
-function p = define_parameters_GE()
+function param = define_parameters()
 
 % This function defines the parameters needed for the Huggett_GE.m script
 
 %% Economic Parameters
     
     % Relative risk aversion
-    p.gamma = 2;                            % although pset calls it sigma, I will stick with this so that it is easier to use previous code. 
+    param.gamma = 2;                            % although pset calls it sigma, I will stick with this so that it is easier to use previous code. 
 
     % Discount rate
-    p.rho = 0.05;
+    param.rho = 0.05;
     
     % depreciation rate
-    p.delta = 0.05;
+    param.delta = 0.05;
 
     % share of capital in production
-    p.alpha = 1/3;
+    param.alpha = 1/3;
 
     % Total factor productivity
-    p.A = 0.1;
-    %% WE NO LONGER ASSUME EXOGENOUS INTEREST RATE
-    % Exogenous interest rate
-    % p.r = 0.035;
-    
-    % idiosyncratic productivity process
-    p.z_u = 1;
-    p.z_e = 2;
-    p.zz = [p.z_u, p.z_e];
+    param.A = 0.1;
 
-    % Transition rates for idiosyncratic productivity process ( same for both states)
-    p.lambda_u = 1/3;
-    p.lambda_e = 1/3;
-    p.lambda = [p.lambda_u, p.lambda_e];
-    
+    % Earnings parameters:
+    param.zz  = [1 ,2];     % idiosyncratic shock(efficency units of labor)
+    param.la1 = 1/3;        % poisson rate of shock 1
+    param.la2 = 1/3;        % poisson rate of shock 2
+    param.L   = param.la1/(param.la1+param.la2) * param.zz(1) + param.la2/(param.la1+param.la2) * param.zz(2);  % average labor supply?
+
 %% Economic Functions
-    
-    % Utility funtion
-    p.u = @(c) c.^(1-p.gamma)/(1-p.gamma);
-
+    % Utility function
+    param.u     = @(c) c.^(1-param.gamma) / (1-param.gamma); 
     % Marginal utility function
-    p.mu = @(c) c.^(-p.gamma);
-
-    % FOC: mu(c)=dV -> c=inv_mu(dV)
-    p.inv_mu = @(dV) dV.^(-1/p.gamma);
+    param.u1    = @(c) c.^(-param.gamma);
+    % Inverse of marginal utility function
+    param.u1inv = @(c) c.^(-1/param.gamma);
 
     % Production function
-    p.f = @(k) p.A*k.^p.alpha;
+    param.f = @(K) param.A*K.^param.alpha*param.L.^(1-param.alpha);
 
     % marginal product of capital
-    p.fk = @(k) p.alpha*p.A*k.^(p.alpha-1);
-
-    % marginal product of labor 
-    p.fl = @(k) (1-p.alpha)*p.A*k.^p.alpha;
+    param.fK = @(K) param.alpha*param.A*K.^(param.alpha-1)*param.L.^(1-param.alpha);
 
 %% Grid Parmaters
 
-    p.kmin = 0;
-    p.kmax = 20;
+    param.kmin = 0;
+    param.kmax = 20;
+    param.min = [param.kmin];
+    param.max = [param.kmax];
 
     % The number of grid points
-    p.I = 1000;
+    param.I = 1000;
 
     % % WE NO LONGER CONSTRUCT GRID POINTS FOR INTEREST RATES
     % % Grid parameters for interest rate
-    % p.rmin = -0.05;
-    % p.rmax = 0.04;
-    % p.Ir = 20;
+    % param.rmin = -0.05;
+    % param.rmax = 0.04;
+    % param.Ir = 20;
 
-%% Tuning parameters
+%%  Tuning parameters for Value Function and Kolmogorov Forward
 
     % Step size: can be arbitrarily large in implicit method
-    p.Delta = 1000;
+    param.Delta = 1000;
 
     % The maximum number of value function iterations
-    p.maxit = 100;
+    param.maxit = 100;
 
     % Tolerance for value function iterations
-    p.tol = 10^(-6);
+    param.crit  = 1e-8;
 
+    param.Delta_KF = 1000;
+    param.maxit_KF = 100;
+    param.crit_KF  = 1e-8;
     %% TUNING PARAMETERS FOR INTEREST RATE ITERATION
     
     % The maximum number of interest rate iterations
-    p.Nr = 40;
+    param.Nr = 40;
 
     % Tolerance for interest rate iterations
-    p.tol_S = 10^(-6);
+    param.tol_S = 10^(-6);
 
 end

@@ -11,10 +11,10 @@ function p = define_parameters()
         p.rho = 0.05;
 
         % Depreciation rate
-        p.delta = 0.05;
+        p.delta = 0.01;
         
         % % Initial interest rate
-        p.r = 0.025;    
+        p.r = 0.4;    
         % capital share
         p.alpha = 1/3;
     
@@ -60,10 +60,10 @@ function p = define_parameters()
     %% Tuning parameters
     
         % Step size: can be arbitrarily large in implicit method
-        p.Delta = 1000;
+        p.Delta = 100;
     
         % The maximum number of value function iterations
-        p.maxit = 100;
+        p.maxit = 10;
     
         % Tolerance for value function iterations
         p.tol = 10^(-6);
