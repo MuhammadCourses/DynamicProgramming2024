@@ -1,0 +1,507 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>CompilePset5</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2024-12-18">
+<meta name="DC.source" content="CompilePset5.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h1></h1>
+<!--introduction-->
+<!--/introduction-->
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#1">Partial Equilibrium Model</a>
+</li>
+<li>
+<a href="#2">General Equilibrium Model</a>
+</li>
+</ul>
+</div>
+<h2 id="1">Partial Equilibrium Model</h2>
+<pre class="codeinput">cd(<span class="string">'/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS5/PE/'</span>)
+main
+</pre>
+<pre class="codeoutput">
+p = 
+
+  struct with fields:
+
+       gamma: 2
+         rho: 0.0500
+           r: 0.0350
+       alpha: 0.3333
+           A: 0.1000
+         z_u: 1
+         z_e: 2
+          zz: [1 2]
+    lambda_u: 0.3333
+    lambda_e: 0.3333
+      lambda: [0.3333 0.3333]
+           u: @(c)c.^(1-p.gamma)/(1-p.gamma)
+          mu: @(c)c.^(-p.gamma)
+      inv_mu: @(dV)dV.^(-1/p.gamma)
+           f: @(x)p.A*x(1)^p.alpha*x(2)^(1-p.alpha)
+          fk: @(x)p.alpha*p.A*x(1)^(p.alpha-1)*x(2)^(1-p.alpha)
+          fl: @(x)(1-p.alpha)*p.A*x(1)^p.alpha*x(2)^(-p.alpha)
+        kmin: 0
+        kmax: 20
+           l: 10
+       Delta: 1000
+       maxit: 100
+         tol: 1.0000e-06
+          Nr: 40
+       tol_S: 1.0000e-06
+
+Value function converged. Iteration = 
+    20
+
+Warning: Imaginary parts of complex X and/or Y arguments ignored. 
+Warning: Imaginary parts of complex X and/or Y arguments ignored. 
+Warning: Imaginary parts of complex X and/or Y arguments ignored. 
+Warning: Imaginary parts of complex X and/or Y arguments ignored. 
+Value function converged. Iteration = 
+    17
+
+Warning: Imaginary parts of complex X and/or Y arguments ignored. 
+Warning: Imaginary parts of complex X and/or Y arguments ignored. 
+Warning: Imaginary parts of complex X and/or Y arguments ignored. 
+Warning: Imaginary parts of complex X and/or Y arguments ignored. 
+</pre>
+<img vspace="5" hspace="5" src="CompilePset5_01.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_02.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_03.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_04.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_05.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_06.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_07.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_08.png" alt=""> <h2 id="2">General Equilibrium Model</h2>
+<pre class="codeinput">cd(<span class="string">'/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS5/GE/'</span>)
+main_GE
+</pre>
+<pre class="codeoutput">Starting parallel pool (parpool) using the 'Processes' profile ...
+18-Dec-2024 14:40:25: Connected to 9 of 11 parallel pool workers.
+Connected to parallel pool with 11 workers.
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.068430e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.157375e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.053937e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.132293e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.587138e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.358828e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.825020e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  9.957055e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.259508e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.879351e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.138340e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.482797e-19. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.038811e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.229658e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.939059e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.574516e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.439833e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.497362e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.454905e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.781696e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  9.413925e-19. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.305611e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.089572e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.717200e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  7.939624e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.506494e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.015178e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  9.650845e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.100893e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.464970e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.447464e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.804189e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  9.717504e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.122988e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.473107e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.748087e-19. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.333929e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.370179e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.546954e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.170843e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.069231e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.311849e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.189312e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.661970e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.599192e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.849171e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.042963e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.212066e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.874743e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.209497e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.525398e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.053381e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  7.270992e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.650852e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.883825e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.241923e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.660851e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.959871e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.456004e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.655685e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.753054e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.646867e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.164522e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.313586e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.539027e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.167884e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.603425e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.703882e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.193814e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.213547e-16. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.945259e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.992444e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  7.598188e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.944442e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  9.077343e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.348546e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.163008e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  7.969342e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.258837e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.259866e-16. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.767321e-19. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.682417e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.766041e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.127453e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.368717e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  3.007743e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.604332e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.328561e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.489796e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  7.398763e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.853827e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.845408e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.133803e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  1.344025e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.576456e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.738720e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.848370e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  9.270322e-19. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.279245e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  6.917446e-17. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  2.511958e-18. 
+Value function converged. Iteration = 
+    10
+
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  4.583256e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.344987e-18. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  5.201022e-17. 
+Warning: Matrix is close to singular or badly scaled. Results may be inaccurate.
+RCOND =  8.650603e-17. 
+</pre>
+<img vspace="5" hspace="5" src="CompilePset5_09.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_10.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_11.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_12.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_13.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_14.png" alt=""> <img vspace="5" hspace="5" src="CompilePset5_15.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+
+
+%% Partial Equilibrium Model 
+cd('/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS5/PE/')
+main 
+
+%% General Equilibrium Model
+cd('/Users/muhammadbashir/GitHub/MuhammadCourses/DynamicProgramming2024/ProblemSetSolutions/PS5/GE/')
+main_GE
+##### SOURCE END #####
+-->
+</body>
+</html>

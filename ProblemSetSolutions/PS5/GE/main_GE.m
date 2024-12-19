@@ -165,6 +165,7 @@ saveas(gcf, fullfile('..', 'Output', ['GE_wealth_distribution.png']));
 % economic implications in response to negative productivity shock.
 
 %% Plot TFP sequence over time
+
 %% Define TFP Process Parameters
 nu = 0.2;           % Speed of mean reversion
 A_ss = p.A;     % Steady state TFP

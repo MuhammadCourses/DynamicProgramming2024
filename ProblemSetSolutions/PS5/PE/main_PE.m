@@ -241,9 +241,9 @@ g_stacked = g_stacked./g_sum;
 gg = reshape(g_stacked, G.J, 2);
 
 
-%% 6. GRAPHS 
+%%% 6. GRAPHS 
 
-% 6-1. Optimal consumption 
+%% 6-1. Optimal consumption 
 figure;
 set(gca, 'FontSize', 18)
 plot(G.k, c, 'LineWidth', 2)
@@ -252,12 +252,11 @@ xlabel('Capital, k','FontSize', 14)
 ylabel('Consumption, c_j(k)','FontSize', 14)
 xlim([p.kmin p.kmax])
 legend('Unemployed', 'Employed', 'Location', 'best', 'FontSize', 14)
+title(['Partial Equilibrium with interest rate ', num2str(p.r)], 'FontSize', 16)
 % save figure 
 saveas(gcf, fullfile('..', 'Output', ['PE_optimal_consumption_r' num2str(p.r) '.png']));
 
-
-% 6-2. Optimal Investment 
-
+%% 6-2. Optimal Investment 
 adot = G.income - c;
 figure;
 set(gca, 'FontSize', 18)
@@ -267,10 +266,11 @@ xlabel('Capital, k', 'FontSize', 14)
 ylabel('Investment, I_j(k)', 'FontSize', 14)
 xlim([p.kmin p.kmax])
 legend('Unemployed', 'Employed', 'Location', 'best', 'FontSize', 14)
+title(['Partial Equilibrium with interest rate ', num2str(p.r)], 'FontSize', 16)
 % save figure
 saveas(gcf, fullfile('..', 'Output', ['PE_optimal_investment_r' num2str(p.r) '.png']));
 
-% 6-3. Value function
+%% 6-3. Value function
 figure;
 set(gca, 'FontSize', 18)
 plot(G.k, V, 'LineWidth', 2)
@@ -279,10 +279,11 @@ xlabel('Capital, k', 'FontSize', 14)
 ylabel('Value function, V_j(a)', 'FontSize', 14)
 xlim([p.kmin p.kmax])
 legend('Unemployed', 'Employed', 'Location', 'best', 'FontSize', 14)
+title(['Partial Equilibrium with interest rate ', num2str(p.r)], 'FontSize', 16)
 % save figure
 saveas(gcf, fullfile('..', 'Output', ['PE_value_function_r' num2str(p.r) '.png']));
 
-% 6-4. Wealth distribution
+%% 6-4. Wealth distribution
 figure;
 set(gca, 'FontSize', 14)
 plot(G.k, gg, 'LineWidth', 2)
@@ -294,5 +295,6 @@ hold on
 plot([0,0], yy, '--k', 'LineWidth', 2)
 xlim([p.kmin p.kmax])
 legend('Unemployed', 'Employed', 'No Shortsell Constraint', 'Location', 'best', 'FontSize', 14)
+title(['Partial Equilibrium with interest rate ', num2str(p.r)], 'FontSize', 16)
 % save figure
 saveas(gcf, fullfile('..', 'Output', ['PE_wealth_distribution_r' num2str(p.r) '.png']));
